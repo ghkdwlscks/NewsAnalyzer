@@ -55,7 +55,7 @@ class ArticleView(tk.Frame):
             command=lambda: self.update_clipboard(self.selected_article.naver_url),
             state=tk.DISABLED,
             text="Copy NAVER URL",
-            width=15
+            width=16
         )
         self.copy_naver_url_button.pack(anchor=tk.NW, side=tk.LEFT)
 
