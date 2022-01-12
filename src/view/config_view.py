@@ -25,7 +25,7 @@ class ConfigView(tk.Toplevel):
 
         self.title("Configurations")
         self.geometry(
-            f"+{self.parent.parent.winfo_x() + 400}+{self.parent.parent.winfo_y() + 90}"
+            f"+{self.parent.parent.winfo_x() + 210}+{self.parent.parent.winfo_y() + 90}"
         )
         self.focus_set()
 
@@ -53,7 +53,7 @@ class ConfigView(tk.Toplevel):
         self.fasttext_frame.pack(anchor=tk.NW)
         tk.Label(
             self.fasttext_frame, font=("맑은 고딕", 10, tkFont.BOLD), text="FastText Configurations"
-        ).pack(anchor=tk.NW)
+        ).pack(anchor=tk.NW, pady=(15, 0))
         tk.Label(self.fasttext_frame, text="FastText model path").pack(anchor=tk.NW, padx=(10, 0))
         self.fasttext_path = tk.StringVar(value=self.config_controller.fasttext_path())
         tk.Entry(
