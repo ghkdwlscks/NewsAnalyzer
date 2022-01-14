@@ -36,7 +36,7 @@ class Clusterer:
         clusters = DBSCAN(eps=self.eps, min_samples=self.min_samples).fit_predict(article_vectors)
 
         num_clusters = max(clusters) + 2
-        cluster_list = [[] for i in range(num_clusters)]
+        cluster_list = [[] for _ in range(num_clusters)]
 
         for i, _ in enumerate(article_vectors):
             cluster_list[clusters[i]].append(article_list[i])

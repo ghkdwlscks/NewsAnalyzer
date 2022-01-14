@@ -163,24 +163,26 @@ class Crawler:
             document = html.select_one("div.article_body").text
         elif html.select_one("div.news_end"):
             document = html.select_one("div.news_end").text
-        else:
+
+        try:
+            document = document.replace("\n", " ").replace("\t", " ").replace(
+                "// flash 오류를 우회하기 위한 함수 추가 function _flash_removeCallback() {}", " "
+            )
+            document = re.sub(r"[0-9A-Za-z_.+-]+@[0-9A-Za-z-.]+\.[0-9A-Za-z-.]+", " ", document)
+            document = re.sub(r"[^0-9A-Za-z가-힣. ]", " ", document)
+            document = re.sub(r"\s+", " ", document)
+            document = re.sub(r"^\s", "", document)
+            document = re.sub(r"\.{2,}", ".", document)
+            document = re.sub(r"(?<=[가-힣])\.\s*", ".\n", document)
+            document = re.sub(r"\n.*[^.]\n", "\n", document)
+            document = re.sub(r"\n+", "\n", document)
+            document = re.sub(r"\.", "", document)
+            document = re.sub(r"[\n ]$", "", document)
+
+            sentences = document.splitlines()
+
+        except UnboundLocalError:
+            document = [[]]
             print("Error URL: " + url)
-
-        document = document.replace("\n", " ").replace("\t", " ").replace(
-            "// flash 오류를 우회하기 위한 함수 추가 function _flash_removeCallback() {}", " "
-        )
-        document = re.sub(r"[0-9A-Za-z_.+-]+@[0-9A-Za-z-.]+\.[0-9A-Za-z-.]+", " ", document)
-        document = re.sub(r"[^0-9A-Za-z가-힣. ]", " ", document)
-        document = re.sub(r"\s+", " ", document)
-        document = re.sub(r"^\s", "", document)
-        document = re.sub(r"\.{2,}", ".", document)
-        document = re.sub(r"(?<=[가-힣])\.\s*", ".\n", document)
-        document = re.sub(r"\n.*[^.]\n", "\n", document)
-        document = re.sub(r"\n+", "\n", document)
-        document = re.sub(r"\.", "", document)
-        document = re.sub(r"\n$", "", document)
-
-        sentences = document.splitlines()
-        sentences = [re.sub(r"\s+$", "", sentence) for sentence in sentences]
 
         return [sentence.split() for sentence in sentences]
