@@ -85,4 +85,3 @@ class ConfigView(tk.Toplevel):
                 initialdir=f"{os.getcwd()}/fasttext", parent=self.fasttext_frame
             )
         )
-        self.config_controller.update("FASTTEXT", "PATH", self.fasttext_path.get())

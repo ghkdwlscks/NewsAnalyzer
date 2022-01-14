@@ -42,6 +42,7 @@ class ConfigController:
 
         self.update("KEYWORDS", "INCLUDE", self.config_view.keywords_to_include.get())
         self.update("KEYWORDS", "EXCLUDE", self.config_view.keywords_to_exclude.get())
+        self.update("FASTTEXT", "PATH", self.config_view.fasttext_path.get())
 
         with open(self.config.config_path, "w", encoding="utf-8") as config_file:
             config_file.write("; Writer: Jinchan Hwang <ghkdwlscks@gmail.com>\n\n")
