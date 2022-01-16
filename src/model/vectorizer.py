@@ -20,10 +20,10 @@ class Vectorizer:
         self.model = None
 
     def load_fasttext_model(self, fasttext_model_path):
-        """Load FastText model.
+        """Load pretrained FastText model.
 
         Args:
-            fasttext_model_path (str): FastText model path.
+            fasttext_model_path (str): Pretrained FastText model path.
         """
 
         self.model = models.fasttext.load_facebook_model(fasttext_model_path)

@@ -54,7 +54,9 @@ class ConfigView(tk.Toplevel):
         tk.Label(
             self.fasttext_frame, font=("맑은 고딕", 10, tkFont.BOLD), text="FastText Configurations"
         ).pack(anchor=tk.NW, pady=(15, 0))
-        tk.Label(self.fasttext_frame, text="FastText model path").pack(anchor=tk.NW, padx=(10, 0))
+        tk.Label(
+            self.fasttext_frame, text="Pretrained FastText model path"
+        ).pack(anchor=tk.NW, padx=(10, 0))
         self.fasttext_path = tk.StringVar(value=self.config_controller.fasttext_path())
         tk.Entry(
             self.fasttext_frame,
@@ -77,11 +79,12 @@ class ConfigView(tk.Toplevel):
         self.destroy()
 
     def browse_clicked(self):
-        """Browse FastText model path.
+        """Browse pretrained FastText model path.
         """
 
-        self.fasttext_path.set(
-            tkFileDialog.askopenfilename(
-                initialdir=f"{os.getcwd()}/fasttext", parent=self.fasttext_frame
-            )
+        fasttext_path = tkFileDialog.askopenfilename(
+            initialdir=f"{os.getcwd()}/fasttext", parent=self.fasttext_frame
         )
+
+        if fasttext_path:
+            self.fasttext_path.set(fasttext_path)

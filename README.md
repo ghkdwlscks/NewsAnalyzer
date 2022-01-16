@@ -13,7 +13,7 @@
   pip install -r requirements.txt
   ```
 
-* Downloading FastText pretrained model
+* Downloading pretrained FastText model
   1. Download word vector binary file from <https://fasttext.cc/docs/en/crawl-vectors.html>.
   2. Move the downloaded binary (e.g., cc.ko.300.bin.gz) under NewsAnalyzer/fasttext/.
 

@@ -67,10 +67,10 @@ class ConfigController:
         return self.config.get("KEYWORDS", "EXCLUDE")
 
     def fasttext_path(self):
-        """Returns FastText model path.
+        """Returns pretrained FastText model path.
 
         Returns:
-            str: FastText model path.
+            str: Pretrained FastText model path.
         """
 
         return self.config.get("FASTTEXT", "PATH")

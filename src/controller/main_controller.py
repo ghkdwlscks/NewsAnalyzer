@@ -29,10 +29,10 @@ class MainController:
         self.cluster_view = kwargs["cluster_view"]
 
     def load_fasttext_model(self, fasttext_path):
-        """Load FastText model.
+        """Load pretrained FastText model.
 
         Args:
-            fasttext_path: FastText model path.
+            fasttext_path: Pretrained FastText model path.
         """
 
         for run_label in self.button_view.run_labels:
@@ -42,7 +42,7 @@ class MainController:
         try:
             self.vectorizer.load_fasttext_model(fasttext_path)
         except (NotImplementedError, TypeError, struct.error):
-            error_message = tk.Label(self.button_view, fg="red", text="No FastText model found!")
+            error_message = tk.Label(self.button_view, fg="red", text="Invalid FastText model!")
             error_message.pack(anchor=tk.NW)
             self.button_view.run_labels.append(error_message)
             self.button_view.load_model_button["state"] = tk.NORMAL

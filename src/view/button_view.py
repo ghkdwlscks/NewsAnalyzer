@@ -51,7 +51,7 @@ class ButtonView(tk.Frame):
         self.config_controller = config_controller
 
     def load_model_clicked(self):
-        """Load FastText model.
+        """Load pretrained FastText model.
         """
 
         self.load_model_button["state"] = tk.DISABLED
