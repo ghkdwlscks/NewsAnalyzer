@@ -25,17 +25,25 @@ class ButtonView(tk.Frame):
         self.load_model_button = tk.Button(
             self, command=self.load_model_clicked, text="Load model", width=22
         )
-        self.load_model_button.pack(anchor=tk.NE, pady=(30, 2))
+        self.load_model_button.pack(anchor=tk.NE, pady=(30, 10))
 
-        self.run_button = tk.Button(
-            self, command=self.run_clicked, state=tk.DISABLED, text="Run", width=22
-        )
-        self.run_button.pack(anchor=tk.NE, pady=(2, 5))
+        self.buttons = {
+            "run": tk.Button(
+                self, command=self.run_clicked, state=tk.DISABLED, text="Run", width=22
+            ),
+            "cancel": tk.Button(
+                self, command=self.cancel_clicked, state=tk.DISABLED, text="Cancel", width=22
+            ),
+            "config": tk.Button(
+                self, command=self.config_clicked, text="Configurations", width=22
+            )
+        }
 
-        self.config_button = tk.Button(
-            self, command=self.config_clicked, text="Configurations", width=22
-        )
-        self.config_button.pack(anchor=tk.SE, pady=2, side=tk.BOTTOM)
+        self.buttons["run"].pack(anchor=tk.NE, pady=2)
+        self.buttons["cancel"].pack(anchor=tk.NE, pady=(2, 5))
+        self.buttons["config"].pack(anchor=tk.SE, pady=2, side=tk.BOTTOM)
+
+        self.stop_signal = False
 
         self.run_labels = []
 
@@ -56,7 +64,7 @@ class ButtonView(tk.Frame):
 
         self.load_model_button["state"] = tk.DISABLED
         self.load_model_button["text"] = "Loading model..."
-        self.config_button["state"] = tk.DISABLED
+        self.buttons["config"]["state"] = tk.DISABLED
 
         threading.Thread(
             target=self.main_controller.load_fasttext_model,
@@ -101,20 +109,27 @@ class ButtonView(tk.Frame):
         try:
             if int(num_pages.get()) not in range(1, 401):
                 raise ValueError
-            self.run_button["state"] = tk.DISABLED
-            self.config_button["state"] = tk.DISABLED
+            self.buttons["run"]["state"] = tk.DISABLED
+            self.buttons["config"]["state"] = tk.DISABLED
+            self.stop_signal = False
+            keywords = [
+                self.config_controller.keywords_to_include(),
+                self.config_controller.keywords_to_exclude()
+            ]
             threading.Thread(
                 target=self.main_controller.run,
-                args=[
-                    int(num_pages.get()),
-                    self.config_controller.keywords_to_include(),
-                    self.config_controller.keywords_to_exclude()
-                ],
+                args=[int(num_pages.get()), keywords, lambda: self.stop_signal],
                 daemon=True
             ).start()
             run_window.destroy()
         except ValueError:
             tkMessageBox.showerror("Error", "Input should be 1-400!", parent=run_window)
+
+    def cancel_clicked(self):
+        """Set stop signal.
+        """
+
+        self.stop_signal = True
 
     def config_clicked(self):
         """Open configuration window.

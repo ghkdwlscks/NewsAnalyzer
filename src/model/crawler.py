@@ -19,29 +19,31 @@ class Crawler:
         self.url_prefix = "https://search.naver.com/search.naver?where=news&query="
         self.url_postfix = "&nso=so%3Add%2Cp%3Aall"
 
-    def run(self, num_pages, keywords_to_include, keywords_to_exclude, update_progress):
+    def run(self, num_pages, keywords, update_progress, stop_signal):
         """Crawl articles from the given number of pages.
 
         Args:
             num_pages (int): Number of pages to be crawled.
-            keywords_to_include (str): Keywords to include.
-            keywords_to_exclude (str): Keywords to exclude.
+            keywords (list[str]): List of keywords to include and keywords to exclude.
             update_progress (Callable[[int, int], None]): Function that updates crawling progress.
+            stop_signal (Callable[[], bool]): Function that returns stop signal.
 
         Returns:
             list[Article]: List of Article objects.
         """
 
-        keywords = keywords_to_include.replace(",", "+%7C+")
-        if keywords_to_exclude:
-            keywords += "+-"
-            keywords += keywords_to_exclude.replace(",", "+-")
+        keyword_fix = keywords[0].replace(",", "+%7C+")
+        if keywords[1]:
+            keyword_fix += "+-"
+            keyword_fix += keywords[1].replace(",", "+-")
 
         target_articles = []
         duplicate_checker = set()
         for index in range(num_pages):
+            if stop_signal():
+                return None
             search_url = (
-                self.url_prefix + keywords + self.url_postfix + self.get_page_postfix(index)
+                self.url_prefix + keyword_fix + self.url_postfix + self.get_page_postfix(index)
             )
             articles = self.get_article_list(search_url)
             for article in articles:
@@ -54,6 +56,8 @@ class Crawler:
 
         article_list = []
         for article in target_articles:
+            if stop_signal():
+                return None
             article_list.append(
                 Article(
                     self.get_title(article[0]),

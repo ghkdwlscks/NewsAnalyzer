@@ -47,23 +47,26 @@ class MainController:
             self.button_view.run_labels.append(error_message)
             self.button_view.load_model_button["state"] = tk.NORMAL
             self.button_view.load_model_button["text"] = "Reload model"
-            self.button_view.config_button["state"] = tk.NORMAL
+            self.button_view.buttons["config"]["state"] = tk.NORMAL
             return
 
         self.button_view.load_model_button["font"] = ("맑은 고딕", 10)
         self.button_view.load_model_button["text"] = "Model loaded!"
-        self.button_view.run_button["state"] = tk.NORMAL
-        self.button_view.config_button["state"] = tk.DISABLED
+        self.button_view.buttons["run"]["state"] = tk.NORMAL
+        self.button_view.buttons["config"]["state"] = tk.DISABLED
         tk.Label(self.button_view, fg="green", text="Model loaded!").pack(anchor=tk.NW)
 
-    def run(self, num_pages, keywords_to_include, keywords_to_exclude):
+    def run(self, num_pages, keywords, stop_signal):
         """Run NewsAnalyzer.
 
         Args:
             num_pages (int): Number of pages to be crawled.
-            keywords_to_include (str): Keywords to include.
-            keywords_to_exclude (str): Keywords to exclude.
+            keywords (list[str]): List of keywords to include and keywords to exclude.
+            stop_signal (Callable[[], bool]): Function that returns stop signal.
         """
+
+        self.button_view.buttons["run"]["text"] = "Running..."
+        self.button_view.buttons["cancel"]["state"] = tk.NORMAL
 
         for run_label in self.button_view.run_labels:
             run_label.destroy()
@@ -73,21 +76,30 @@ class MainController:
         self.article_view.disable_buttons()
         self.cluster_view.cluster_listbox.delete(0, tk.END)
 
-        article_list = self.crawl(num_pages, keywords_to_include, keywords_to_exclude)
+        article_list = self.crawl(num_pages, keywords, stop_signal)
+        if stop_signal():
+            self.handle_stop_signal()
+            return
         if article_list:
-            self.vectorize(article_list)
+            self.vectorize(article_list, stop_signal)
+            if stop_signal():
+                self.handle_stop_signal()
+                return
+            self.button_view.buttons["cancel"]["state"] = tk.DISABLED
             self.cluster(article_list)
 
-        self.button_view.run_button["state"] = tk.NORMAL
-        self.button_view.config_button["state"] = tk.NORMAL
+        self.button_view.buttons["run"]["state"] = tk.NORMAL
+        self.button_view.buttons["run"]["text"] = "Run"
+        self.button_view.buttons["cancel"]["state"] = tk.DISABLED
+        self.button_view.buttons["config"]["state"] = tk.NORMAL
 
-    def crawl(self, num_pages, keywords_to_include, keywords_to_exclude):
+    def crawl(self, num_pages, keywords, stop_signal):
         """Crawl articles from the given number of pages.
 
         Args:
             num_pages (int): Number of pages to be crawled.
-            keywords_to_include (str): Keywords to include.
-            keywords_to_exclude (str): Keywords to exclude.
+            keywords (list[str]): List of keywords to include and keywords to exclude.
+            stop_signal (Callable[[], bool]): Function that returns stop signal.
 
         Returns:
             list[Article]: List of Article objects.
@@ -102,24 +114,26 @@ class MainController:
             progress.set(f"Crawling... ({num_crawled}/{num_targets})")
 
         try:
-            article_list = self.crawler.run(
-                num_pages, keywords_to_include, keywords_to_exclude, update_progress
-            )
+            article_list = self.crawler.run(num_pages, keywords, update_progress, stop_signal)
         except requests.exceptions.ConnectionError:
             error_message = tk.Label(self.button_view, fg="red", text="Disconnected!")
             error_message.pack(anchor=tk.NW)
             self.button_view.run_labels.append(error_message)
             return None
 
+        if stop_signal():
+            return None
+
         message["fg"] = "green"
 
         return article_list
 
-    def vectorize(self, article_list):
+    def vectorize(self, article_list, stop_signal):
         """Vectorize articles.
 
         Args:
             article_list (list[Article]): List of Article objects.
+            stop_signal (Callable[[], bool]): Function that returns stop signal.
         """
 
         progress = tk.StringVar(value=f"Vectorizing... (0/{len(article_list)})")
@@ -129,6 +143,8 @@ class MainController:
 
         num_vectorized = 0
         for article in article_list:
+            if stop_signal():
+                return
             self.vectorizer.run(article)
             num_vectorized += 1
             progress.set(f"Vectorizing... ({num_vectorized}/{len(article_list)})")
@@ -167,3 +183,16 @@ class MainController:
                 self.article_view.display_article_details(cluster[index - line_count])
                 return
             line_count += len(cluster)
+
+    def handle_stop_signal(self):
+        """Handle stop signal.
+        """
+
+        message = tk.Label(self.button_view, fg="red", text="Stopped!")
+        message.pack(anchor=tk.NW)
+
+        self.button_view.run_labels.append(message)
+        self.button_view.buttons["run"]["state"] = tk.NORMAL
+        self.button_view.buttons["run"]["text"] = "Run"
+        self.button_view.buttons["cancel"]["state"] = tk.DISABLED
+        self.button_view.buttons["config"]["state"] = tk.NORMAL
