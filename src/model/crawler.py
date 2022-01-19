@@ -2,7 +2,6 @@
 """
 
 
-
 import re
 
 import requests
@@ -95,7 +94,7 @@ class Crawler:
         """
 
         raw = requests.get(search_url, headers={'User-Agent': 'Mozilla/5.0'})
-        html = BeautifulSoup(raw.text, "html.parser")
+        html = BeautifulSoup(raw.text, "lxml")
 
         return html.select("ul.list_news > li")
 
@@ -160,7 +159,7 @@ class Crawler:
         """
 
         raw = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
-        html = BeautifulSoup(raw.text, "html.parser")
+        html = BeautifulSoup(raw.text, "lxml")
         if html.select_one("div._article_body_contents.article_body_contents"):
             document = html.select_one("div._article_body_contents.article_body_contents").text
         elif html.select_one("div.article_body"):
