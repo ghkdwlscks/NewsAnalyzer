@@ -76,17 +76,16 @@ class MainController:
         self.article_view.disable_buttons()
         self.cluster_view.cluster_listbox.delete(0, tk.END)
 
-        article_list = self.crawl(num_pages, keywords, stop_signal)
-        if stop_signal():
-            self.handle_stop_signal()
-            return
-        if article_list:
-            self.vectorize(article_list, stop_signal)
-            if stop_signal():
-                self.handle_stop_signal()
-                return
-            self.button_view.buttons["cancel"]["state"] = tk.DISABLED
-            self.cluster(article_list)
+        try:
+            article_list = self.crawl(num_pages, keywords, stop_signal)
+            if article_list:
+                self.vectorize(article_list, stop_signal)
+                self.button_view.buttons["cancel"]["state"] = tk.DISABLED
+                self.cluster(article_list)
+        except InterruptedError:
+            stop_message = tk.Label(self.button_view, fg="red", text="Stopped!")
+            stop_message.pack(anchor=tk.NW)
+            self.button_view.run_labels.append(stop_message)
 
         self.button_view.buttons["run"]["state"] = tk.NORMAL
         self.button_view.buttons["run"]["text"] = "Run"
@@ -110,8 +109,8 @@ class MainController:
         message.pack(anchor=tk.NW)
         self.button_view.run_labels.append(message)
 
-        def update_progress(num_targets, num_crawled):
-            progress.set(f"Crawling... ({num_crawled}/{num_targets})")
+        def update_progress(num_targets, num_processed):
+            progress.set(f"Crawling... ({num_processed}/{num_targets})")
 
         try:
             article_list = self.crawler.run(num_pages, keywords, update_progress, stop_signal)
@@ -183,16 +182,3 @@ class MainController:
                 self.article_view.display_article_details(cluster[index - line_count])
                 return
             line_count += len(cluster)
-
-    def handle_stop_signal(self):
-        """Handle stop signal.
-        """
-
-        message = tk.Label(self.button_view, fg="red", text="Stopped!")
-        message.pack(anchor=tk.NW)
-
-        self.button_view.run_labels.append(message)
-        self.button_view.buttons["run"]["state"] = tk.NORMAL
-        self.button_view.buttons["run"]["text"] = "Run"
-        self.button_view.buttons["cancel"]["state"] = tk.DISABLED
-        self.button_view.buttons["config"]["state"] = tk.NORMAL
