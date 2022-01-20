@@ -110,6 +110,34 @@ class Crawler:
         return article_list
 
     @classmethod
+    def process_article(cls, num_processed, update_progress, stop_signal, article):
+        """Process article tag to Article object.
+
+        Args:
+            num_processed (multiprocessing.Value): Number of processed articles.
+            update_progress (Callable[[int], None]): Function that updates crawling progress.
+            stop_signal (Callable[[], bool]): Function that returns stop signal.
+            article (bs4.element.Tag): Tag of the article.
+
+        Returns:
+            Article: Article object.
+        """
+
+        title = cls.get_title(article)
+        press = cls.get_press(article)
+        origin_url, naver_url = cls.get_urls(article)
+        document = cls.get_document(naver_url)
+
+        if stop_signal():
+            raise InterruptedError
+
+        with num_processed.get_lock():
+            num_processed.value += 1
+            update_progress(num_processed.value)
+
+        return Article(title, press, origin_url, naver_url, document)
+
+    @classmethod
     def get_title(cls, article):
         """Get title of the given article tag.
 
@@ -200,30 +228,3 @@ class Crawler:
             print("Error URL: " + url)
 
         return [sentence.split() for sentence in sentences]
-
-    @classmethod
-    def process_article(cls, num_processed, update_progress, stop_signal, article):
-        """Process article tag to Article object.
-
-        Args:
-            num_processed (multiprocessing.Value): Number of processed articles.
-            update_progress (Callable[[int], None]): Function that updates crawling progress.
-            stop_signal (Callable[[], bool]): Function that returns stop signal.
-            article (bs4.element.Tag): Tag of the article.
-
-        Returns:
-            Article: Article object.
-        """
-        title = cls.get_title(article)
-        press = cls.get_press(article)
-        origin_url, naver_url = cls.get_urls(article)
-        document = cls.get_document(naver_url)
-
-        if stop_signal():
-            raise InterruptedError
-
-        with num_processed.get_lock():
-            num_processed.value += 1
-            update_progress(num_processed.value)
-
-        return Article(title, press, origin_url, naver_url, document)
