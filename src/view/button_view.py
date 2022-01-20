@@ -78,7 +78,8 @@ class ButtonView(tk.Frame):
 
         run_window = tk.Toplevel(self, padx=10, pady=10)
         run_window.title("Run Configurations")
-        run_window.geometry(f"+{self.parent.winfo_x() + 400}+{self.parent.winfo_y() + 90}")
+        run_window.resizable(False, False)
+        run_window.geometry(f"+{self.parent.winfo_x() + 365}+{self.parent.winfo_y() + 90}")
 
         tk.Label(
             run_window, text="Input the number of pages to be crawled. (1-400)"

@@ -24,6 +24,7 @@ class ConfigView(tk.Toplevel):
         self.config_controller = config_controller
 
         self.title("Configurations")
+        self.resizable(False, False)
         self.geometry(
             f"+{self.parent.parent.winfo_x() + 210}+{self.parent.parent.winfo_y() + 90}"
         )
