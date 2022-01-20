@@ -50,6 +50,7 @@ class Crawler:
             )
             target_articles = pool.map(get_article_list, search_url_list)
         target_articles = [article for page in target_articles for article in page]
+        target_articles = list(dict.fromkeys(target_articles))
         target_articles.reverse()
 
         with ThreadPool(psutil.cpu_count(logical=False)) as pool:
@@ -57,7 +58,7 @@ class Crawler:
             process_article = partial(
                 self.process_article,
                 num_processed,
-                partial(update_progress, num_targets.value),
+                partial(update_progress, len(target_articles)),
                 stop_signal
             )
             article_list = pool.map(process_article, target_articles)
@@ -146,7 +147,7 @@ class Crawler:
             article (bs4.element.Tag): Tag of the article.
 
         Returns:
-            tuple[str, str]: Original and NAVER URLs of the article.
+            tuple[str, str]: Origin and NAVER URLs of the article.
         """
 
         origin_url = article.select_one("a.news_tit")["href"]
