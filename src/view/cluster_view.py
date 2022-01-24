@@ -52,6 +52,15 @@ class ClusterView(tk.Frame):
         """
 
         self.cluster_list = cluster_list
+
+        font = tkFont.Font(font=("맑은 고딕", 10))
+
+        article_list = [article for cluster in cluster_list for article in cluster]
+        max_press_width = max(
+            [font.measure(article.press, self.cluster_listbox) for article in article_list]
+        )
+        space_width = font.measure(" ", self.cluster_listbox)
+
         for i, cluster in enumerate(self.cluster_list):
             if i != len(self.cluster_list) - 1:
                 cluster_number = f"Cluster {i} ({len(cluster)})"
@@ -59,7 +68,9 @@ class ClusterView(tk.Frame):
                 cluster_number = "Noise"
             self.cluster_listbox.insert(tk.END, cluster_number)
             for article in cluster:
-                self.cluster_listbox.insert(tk.END, "    " + article.title)
+                press_width = font.measure(article.press, self.cluster_listbox)
+                padding = (max_press_width - press_width) // space_width + 2
+                self.cluster_listbox.insert(tk.END, article.press + " " * padding + article.title)
 
     def article_clicked(self, event):
         """Display article details.
