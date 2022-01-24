@@ -50,7 +50,7 @@ class Crawler:
             )
             target_articles = pool.map(get_article_list, search_url_list)
         target_articles = [article for page in target_articles for article in page]
-        target_articles = list(dict.fromkeys(target_articles))
+        target_articles = self.eliminate_duplicates(target_articles)
         target_articles.reverse()
 
         with ThreadPool(psutil.cpu_count(logical=False)) as pool:
@@ -90,7 +90,7 @@ class Crawler:
             search_url (str): Page URL to get articles from.
 
         Returns:
-            bs4.element.ResultSet: List of article tags.
+            list[bs4.element.Tag]: List of article tags.
         """
 
         raw = requests.get(search_url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -108,6 +108,28 @@ class Crawler:
             update_progress(num_targets.value, 0)
 
         return article_list
+
+    @classmethod
+    def eliminate_duplicates(cls, target_articles):
+        """Eliminate duplicate articles.
+
+        Args:
+            target_articles (list[bs4.element.Tag]): List of article tags.
+
+        Returns:
+            list[bs4.element.Tag]: List of unique article tags.
+        """
+
+        unique_articles = []
+        duplicate_checker = set()
+
+        for article in target_articles:
+            naver_url = cls.get_urls(article)[1]
+            if naver_url not in duplicate_checker:
+                unique_articles.append(article)
+                duplicate_checker.add(naver_url)
+
+        return unique_articles
 
     @classmethod
     def process_article(cls, num_processed, update_progress, stop_signal, article):

@@ -26,24 +26,3 @@ class Article:
     naver_url: str
     document: list[list[str]]
     article_vector: np.ndarray = np.zeros(300)
-
-    def __eq__(self, other):
-        """Return whether two objects are equivalent.
-
-        Args:
-            other (Article): Article object.
-
-        Returns:
-            bool: True if two Article object are equivalent, False otherwise.
-        """
-
-        return self.naver_url == other.naver_url
-
-    def __hash__(self):
-        """Hash function.
-
-        Returns:
-            str: NAVER URL.
-        """
-
-        return hash(self.naver_url)
