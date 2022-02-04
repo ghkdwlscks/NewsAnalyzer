@@ -1,3 +1,6 @@
+# Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>
+
+
 # -*- mode: python ; coding: utf-8 -*-
 
 

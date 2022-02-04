@@ -1,4 +1,4 @@
-<!-- Writer: Jinchan Hwang <ghkdwlscks@gmail.com> -->
+<!-- Writer: Jinchan Hwang <jchwang@yonsei.ac.kr> -->
 
 # NewsAnalyzer
 
@@ -30,4 +30,4 @@ NewsAnalyzer has following features:
 
 ## Author
 
-Jinchan Hwang - ghkdwlscks@gmail.com
+Jinchan Hwang - jchwang@yonsei.ac.kr

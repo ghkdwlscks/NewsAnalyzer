@@ -1,3 +1,5 @@
+# Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>
+
 bs4
 gensim
 lxml

@@ -1,2 +1,2 @@
-"""Writer: Jinchan Hwang <ghkdwlscks@gmail.com>
+"""Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>
 """

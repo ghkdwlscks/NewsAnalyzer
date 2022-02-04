@@ -1,4 +1,4 @@
-"""Writer: Jinchan Hwang <ghkdwlscks@gmail.com>
+"""Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>
 """
 
 
@@ -45,7 +45,7 @@ class ConfigController:
         self.update("FASTTEXT", "PATH", self.config_view.fasttext_path.get())
 
         with open(self.config.config_path, "w", encoding="utf-8") as config_file:
-            config_file.write("; Writer: Jinchan Hwang <ghkdwlscks@gmail.com>\n\n")
+            config_file.write("; Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>\n\n")
             self.config.write(config_file)
 
     def keywords_to_include(self):

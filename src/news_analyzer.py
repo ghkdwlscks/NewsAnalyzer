@@ -1,4 +1,4 @@
-"""Writer: Jinchan Hwang <ghkdwlscks@gmail.com>
+"""Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>
 """
 
 
@@ -31,7 +31,7 @@ class NewsAnalyzer(tk.Tk):
         tkFont.nametofont("TkDefaultFont").configure(family="맑은 고딕", size=10)
 
         tk.Label(
-            self, font=("Calibri", 9), text="Jinchan Hwang, ghkdwlscks@gmail.com"
+            self, font=("Calibri", 9), text="Jinchan Hwang, jchwang@yonsei.ac.kr"
         ).pack(anchor=tk.SE, side=tk.BOTTOM)
 
         # Models
