@@ -16,10 +16,14 @@ NewsAnalyzer has following features:
 
 * Python3 version: Python 3.9.1
 
-* Downloading NewsAnalyzer
+### Executing NewsAnalyzer
+
+* Downloading and setup NewsAnalyzer
 
     ```sh
     git clone https://github.com/ghkdwlscks/NewsAnalyzer.git
+    cd NewsAnalyzer
+    mkdir fasttext
     ```
 
 * Installing Python3 libraries
@@ -29,10 +33,16 @@ NewsAnalyzer has following features:
     ```
 
 * Downloading pretrained [FastText](https://fasttext.cc/) model
-    1. Download word vector binary file from <https://fasttext.cc/docs/en/crawl-vectors.html>.
-    2. Move the downloaded binary (e.g., cc.ko.300.bin.gz) under NewsAnalyzer/fasttext/.
 
-## Running NewsAnalyzer
+    ```sh
+    wget -P fasttext https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.ko.300.bin.gz
+    ```
+
+* Executing NewsAnalyzer
+
+    ``` sh
+    python3 src/news_analyzer.py
+    ```
 
 ## Author
 
