@@ -3,6 +3,7 @@
 
 
 import re
+from datetime import datetime
 from functools import partial
 from multiprocessing import Value
 from multiprocessing.pool import ThreadPool
@@ -247,6 +248,8 @@ class Crawler:
 
         except UnboundLocalError:
             document = [[]]
-            print("Error URL: " + url)
+            file_name = "error_" + datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + ".txt"
+            with open(file_name, "w", encoding="utf-8") as error_log:
+                error_log.write("Error URL: " + url)
 
         return [sentence.split() for sentence in sentences]
