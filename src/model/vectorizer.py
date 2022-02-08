@@ -3,6 +3,8 @@
 
 
 import re
+import struct
+from pickle import UnpicklingError
 
 import numpy as np
 from gensim import models
@@ -19,6 +21,7 @@ class Vectorizer:
         self.weight = weight
         self.model = None
 
+
     def load_fasttext_model(self, fasttext_model_path):
         """Load pretrained FastText model.
 
@@ -26,7 +29,27 @@ class Vectorizer:
             fasttext_model_path (str): Pretrained FastText model path.
         """
 
-        self.model = models.fasttext.load_facebook_model(fasttext_model_path)
+        try:
+            self.model = models.fasttext.FastTextKeyedVectors.load(fasttext_model_path)
+        except UnpicklingError:
+            try:
+                self.model = models.fasttext.load_facebook_model(fasttext_model_path)
+            except (NotImplementedError, TypeError, struct.error) as invalid_model_error:
+                raise RuntimeError from invalid_model_error
+
+    def update_fasttext_model(self, sentences, model_name):
+        """Update and save FastText model.
+
+        Args:
+            sentences (list[list[str]]): List of sentences, which is list of words.
+            model_name (str): Name of trained model to be saved.
+        """
+
+        self.model.build_vocab(sentences, update=True)
+        self.model.train(
+            sentences, total_examples=self.model.corpus_count, epochs=self.model.epochs
+        )
+        self.model.save(f"fasttext/{model_name}")
 
     def run(self, article):
         """Vectorize the given article.

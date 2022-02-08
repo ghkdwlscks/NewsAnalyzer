@@ -84,6 +84,15 @@ class ArticleView(tk.Frame):
         self.article_details.insert(tk.END, "\nURL: " + article.origin_url)
         self.article_details.insert(tk.END, "\nNAVER URL: " + article.naver_url)
 
+    def clear_article_details(self):
+        """Clear article details.
+        """
+
+        self.disable_buttons()
+
+        self.selected_article = None
+        self.article_details.delete("1.0", tk.END)
+
     def update_clipboard(self, url):
         """Update clipboard.
 

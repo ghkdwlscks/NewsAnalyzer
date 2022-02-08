@@ -34,43 +34,55 @@ class ConfigView(tk.Toplevel):
             self, command=self.save_clicked, text="Save", width=10
         ).pack(anchor=tk.NE, padx=(20, 0), side=tk.RIGHT)
 
-        self.keyword_frame = tk.Frame(self)
-        self.keyword_frame.pack(anchor=tk.NW)
+        keyword_frame = tk.Frame(self)
+        keyword_frame.pack(anchor=tk.NW)
+
         tk.Label(
-            self.keyword_frame, font=("맑은 고딕", 10, tkFont.BOLD), text="Keyword Configurations"
+            keyword_frame, font=("맑은 고딕", 10, tkFont.BOLD), text="Keyword Configurations"
         ).pack(anchor=tk.NW)
-        tk.Label(self.keyword_frame, text="Include").pack(anchor=tk.NW, padx=(10, 0))
+
+        tk.Label(keyword_frame, text="Include").pack(anchor=tk.NW, padx=(10, 0))
         self.keywords_to_include = tk.StringVar(value=self.config_controller.keywords_to_include())
         tk.Entry(
-            self.keyword_frame, textvariable=self.keywords_to_include, width=50
-        ).pack(anchor=tk.NW, padx=(10, 0))
-        tk.Label(self.keyword_frame, text="Exclude").pack(anchor=tk.NW, padx=(10, 0))
-        self.keywords_to_exclude = tk.StringVar(value=self.config_controller.keywords_to_exclude())
-        tk.Entry(
-            self.keyword_frame, textvariable=self.keywords_to_exclude, width=50
+            keyword_frame, textvariable=self.keywords_to_include, width=50
         ).pack(anchor=tk.NW, padx=(10, 0))
 
-        self.fasttext_frame = tk.Frame(self)
-        self.fasttext_frame.pack(anchor=tk.NW)
-        tk.Label(
-            self.fasttext_frame, font=("맑은 고딕", 10, tkFont.BOLD), text="FastText Configurations"
-        ).pack(anchor=tk.NW, pady=(15, 0))
-        tk.Label(
-            self.fasttext_frame, text="Pretrained FastText model path"
+        tk.Label(keyword_frame, text="Exclude").pack(anchor=tk.NW, padx=(10, 0))
+        self.keywords_to_exclude = tk.StringVar(value=self.config_controller.keywords_to_exclude())
+        tk.Entry(
+            keyword_frame, textvariable=self.keywords_to_exclude, width=50
         ).pack(anchor=tk.NW, padx=(10, 0))
+
+        fasttext_frame = tk.Frame(self)
+        fasttext_frame.pack(anchor=tk.NW)
+
+        tk.Label(
+            fasttext_frame, font=("맑은 고딕", 10, tkFont.BOLD), text="FastText Configurations"
+        ).pack(anchor=tk.NW, pady=(50, 0))
+
+        tk.Label(fasttext_frame, text="FastText model path").pack(anchor=tk.NW, padx=(10, 0))
         self.fasttext_path = tk.StringVar(value=self.config_controller.fasttext_path())
         tk.Entry(
-            self.fasttext_frame,
+            fasttext_frame,
             readonlybackground="white",
             state="readonly",
             textvariable=self.fasttext_path,
             width=50
         ).pack(anchor=tk.NW, padx=(10, 0))
         tk.Button(
-            self.fasttext_frame,
-            command=self.browse_clicked,
-            text="Browse"
+            fasttext_frame, command=self.browse_clicked, text="Browse"
         ).pack(anchor=tk.E)
+
+        self.train_enabled = tk.BooleanVar(value=self.config_controller.train_enabled())
+        tk.Checkbutton(
+            fasttext_frame, text="Enable training", variable=self.train_enabled
+        ).pack(anchor=tk.NW, padx=(10, 0))
+
+        tk.Label(fasttext_frame, text="Trained model name").pack(anchor=tk.NW, padx=(10, 0))
+        self.trained_model = tk.StringVar(value=self.config_controller.trained_model())
+        tk.Entry(
+            fasttext_frame, textvariable=self.trained_model, width=50
+        ).pack(anchor=tk.NW, padx=(10, 0))
 
     def save_clicked(self):
         """Save configurations.
@@ -84,7 +96,7 @@ class ConfigView(tk.Toplevel):
         """
 
         fasttext_path = tkFileDialog.askopenfilename(
-            initialdir=f"{os.getcwd()}/fasttext", parent=self.fasttext_frame
+            initialdir=f"{os.getcwd()}/fasttext", parent=self
         )
 
         if fasttext_path:

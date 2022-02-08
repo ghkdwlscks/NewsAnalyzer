@@ -8,7 +8,7 @@ Data preprocessing is the most essential and important part in natural language 
 NewsAnalyzer has following features:
 
 * Clustering news articles
-* Training word vector model while clustering (TBU)
+* Training word vector model while clustering
 
 ## Getting Started
 

@@ -66,6 +66,8 @@ class ClusterView(tk.Frame):
                 cluster_number = f"Cluster {i} ({len(cluster)})"
             else:
                 cluster_number = "Noise"
+            if i:
+                self.cluster_listbox.insert(tk.END, "")
             self.cluster_listbox.insert(tk.END, cluster_number)
             for article in cluster:
                 press_width = font.measure(article.press, self.cluster_listbox)
@@ -84,5 +86,7 @@ class ClusterView(tk.Frame):
             if selection:
                 index = selection[0]
                 title = event.widget.get(index)
-                if not re.match(r"Cluster.*", title):
+                if title and not re.match(r"Cluster.*", title):
                     self.main_controller.display_article_details(index)
+                else:
+                    self.main_controller.clear_article_details()

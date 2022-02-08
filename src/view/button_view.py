@@ -68,7 +68,6 @@ class ButtonView(tk.Frame):
 
         threading.Thread(
             target=self.main_controller.load_fasttext_model,
-            args=[self.config_controller.fasttext_path()],
             daemon=True
         ).start()
 
@@ -113,13 +112,9 @@ class ButtonView(tk.Frame):
             self.buttons["run"]["state"] = tk.DISABLED
             self.buttons["config"]["state"] = tk.DISABLED
             self.stop_signal = False
-            keywords = [
-                self.config_controller.keywords_to_include(),
-                self.config_controller.keywords_to_exclude()
-            ]
             threading.Thread(
                 target=self.main_controller.run,
-                args=[int(num_pages.get()), keywords, lambda: self.stop_signal],
+                args=[int(num_pages.get()), lambda: self.stop_signal],
                 daemon=True
             ).start()
             run_window.destroy()

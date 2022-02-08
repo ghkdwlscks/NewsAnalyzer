@@ -2,7 +2,6 @@
 """
 
 
-import struct
 import tkinter as tk
 
 import requests
@@ -18,6 +17,7 @@ class MainController:
         article_view (ArticleView): ArticleView object.
         button_view (ButtonView): ButtonView object.
         cluster_view (ClusterView): ClusterView object.
+        config_controller (ConfigController): ConfigController object.
     """
 
     def __init__(self, **kwargs):
@@ -27,12 +27,10 @@ class MainController:
         self.article_view = kwargs["article_view"]
         self.button_view = kwargs["button_view"]
         self.cluster_view = kwargs["cluster_view"]
+        self.config_controller = kwargs["config_controller"]
 
-    def load_fasttext_model(self, fasttext_path):
+    def load_fasttext_model(self):
         """Load pretrained FastText model.
-
-        Args:
-            fasttext_path: Pretrained FastText model path.
         """
 
         for run_label in self.button_view.run_labels:
@@ -40,8 +38,8 @@ class MainController:
         self.button_view.run_labels = []
 
         try:
-            self.vectorizer.load_fasttext_model(fasttext_path)
-        except (NotImplementedError, TypeError, struct.error):
+            self.vectorizer.load_fasttext_model(self.config_controller.fasttext_path())
+        except RuntimeError:
             error_message = tk.Label(self.button_view, fg="red", text="Invalid FastText model!")
             error_message.pack(anchor=tk.NW)
             self.button_view.run_labels.append(error_message)
@@ -56,12 +54,11 @@ class MainController:
         self.button_view.buttons["config"]["state"] = tk.DISABLED
         tk.Label(self.button_view, fg="green", text="Model loaded!").pack(anchor=tk.NW)
 
-    def run(self, num_pages, keywords, stop_signal):
+    def run(self, num_pages, stop_signal):
         """Run NewsAnalyzer.
 
         Args:
             num_pages (int): Number of pages to be crawled.
-            keywords (list[str]): List of keywords to include and keywords to exclude.
             stop_signal (Callable[[], bool]): Function that returns stop signal.
         """
 
@@ -77,8 +74,18 @@ class MainController:
         self.cluster_view.cluster_listbox.delete(0, tk.END)
 
         try:
+            keywords = [
+                self.config_controller.keywords_to_include(),
+                self.config_controller.keywords_to_exclude()
+            ]
             article_list = self.crawl(num_pages, keywords, stop_signal)
+            if stop_signal():
+                raise InterruptedError
             if article_list:
+                if self.config_controller.train_enabled():
+                    self.train(article_list)
+                if stop_signal():
+                    raise InterruptedError
                 self.vectorize(article_list, stop_signal)
                 self.button_view.buttons["cancel"]["state"] = tk.DISABLED
                 self.cluster(article_list)
@@ -121,11 +128,30 @@ class MainController:
             return None
 
         if stop_signal():
-            return None
+            raise InterruptedError
 
         message["fg"] = "green"
 
         return article_list
+
+    def train(self, article_list):
+        """Update and save FastText model.
+
+        Args:
+            article_list (list[Article]): List of Article objects.
+        """
+
+        message = tk.Label(self.button_view, text="Training...")
+        message.pack(anchor=tk.NW)
+        self.button_view.run_labels.append(message)
+
+        sentences = []
+        for article in article_list:
+            sentences += article.document
+        self.vectorizer.update_fasttext_model(sentences, self.config_controller.trained_model())
+
+        message["fg"] = "green"
+        message["text"] += " Done!"
 
     def vectorize(self, article_list, stop_signal):
         """Vectorize articles.
@@ -143,7 +169,7 @@ class MainController:
         num_vectorized = 0
         for article in article_list:
             if stop_signal():
-                return
+                raise InterruptedError
             self.vectorizer.run(article)
             num_vectorized += 1
             progress.set(f"Vectorizing... ({num_vectorized}/{len(article_list)})")
@@ -175,10 +201,16 @@ class MainController:
             index (int): Index of ClusterView.cluster_listbox.
         """
 
-        line_count = 0
+        line_count = -1
         for cluster in self.cluster_view.cluster_list:
-            line_count += 1
+            line_count += 2
             if line_count + len(cluster) > index:
                 self.article_view.display_article_details(cluster[index - line_count])
                 return
             line_count += len(cluster)
+
+    def clear_article_details(self):
+        """Clear article details.
+        """
+
+        self.article_view.clear_article_details()

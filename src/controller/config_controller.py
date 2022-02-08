@@ -43,6 +43,10 @@ class ConfigController:
         self.update("KEYWORDS", "INCLUDE", self.config_view.keywords_to_include.get())
         self.update("KEYWORDS", "EXCLUDE", self.config_view.keywords_to_exclude.get())
         self.update("FASTTEXT", "PATH", self.config_view.fasttext_path.get())
+        self.update(
+            "FASTTEXT", "TRAIN", "true" if self.config_view.train_enabled.get() else "false"
+        )
+        self.update("FASTTEXT", "TRAINED_MODEL", self.config_view.trained_model.get())
 
         with open(self.config.config_path, "w", encoding="utf-8") as config_file:
             config_file.write("; Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>\n\n")
@@ -74,3 +78,21 @@ class ConfigController:
         """
 
         return self.config.get("FASTTEXT", "PATH")
+
+    def train_enabled(self):
+        """Returns whether FastText model training enabled.
+
+        Returns:
+            bool: Whether FastText model training enabled.
+        """
+
+        return self.config.getboolean("FASTTEXT", "TRAIN")
+
+    def trained_model(self):
+        """Returns trained model name.
+
+        Returns:
+            str: Trained model name.
+        """
+
+        return self.config.get("FASTTEXT", "TRAINED_MODEL")
