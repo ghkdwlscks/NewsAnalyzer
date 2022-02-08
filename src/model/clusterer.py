@@ -3,19 +3,17 @@
 
 
 import numpy as np
-from sklearn.cluster import DBSCAN
+from hdbscan import HDBSCAN
 
 
 class Clusterer:
     """Clusterer object.
 
     Args:
-        eps (float, optional): Maximum distance of articles in a single cluster. Defaults to 0.3.
         min_samples (int, optional): Minimum number of articles to form a cluster. Defaults to 2.
     """
 
-    def __init__(self, eps=0.3, min_samples=2):
-        self.eps = eps
+    def __init__(self, min_samples=2):
         self.min_samples = min_samples
 
     def run(self, article_list):
@@ -33,7 +31,7 @@ class Clusterer:
             article_vectors.append(article.article_vector)
         article_vectors = np.array(article_vectors)
 
-        clusters = DBSCAN(eps=self.eps, min_samples=self.min_samples).fit_predict(article_vectors)
+        clusters = HDBSCAN(min_cluster_size=self.min_samples).fit_predict(article_vectors)
 
         num_clusters = max(clusters) + 2
         cluster_list = [[] for _ in range(num_clusters)]

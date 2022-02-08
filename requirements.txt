@@ -2,9 +2,9 @@
 
 bs4
 gensim
+hdbscan
 lxml
 numpy
 psutil
 pyinstaller
 requests
-sklearn
