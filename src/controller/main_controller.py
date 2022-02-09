@@ -29,6 +29,8 @@ class MainController:
         self.cluster_view = kwargs["cluster_view"]
         self.config_controller = kwargs["config_controller"]
 
+        self.lastest_fasttext_model = None
+
     def load_fasttext_model(self):
         """Load pretrained FastText model.
         """
@@ -43,13 +45,15 @@ class MainController:
             error_message = tk.Label(self.button_view, fg="red", text="Invalid FastText model!")
             error_message.pack(anchor=tk.NW)
             self.button_view.run_labels.append(error_message)
-            self.button_view.load_model_button["state"] = tk.NORMAL
-            self.button_view.load_model_button["text"] = "Reload model"
+            self.button_view.buttons["load"]["state"] = tk.NORMAL
+            self.button_view.buttons["load"]["text"] = "Reload model"
             self.button_view.buttons["config"]["state"] = tk.NORMAL
             return
 
-        self.button_view.load_model_button["font"] = ("맑은 고딕", 10)
-        self.button_view.load_model_button["text"] = "Model loaded!"
+        self.lastest_fasttext_model = self.config_controller.fasttext_path()
+
+        self.button_view.buttons["load"]["font"] = ("맑은 고딕", 10)
+        self.button_view.buttons["load"]["text"] = "Model loaded!"
         self.button_view.buttons["run"]["state"] = tk.NORMAL
         self.button_view.buttons["config"]["state"] = tk.DISABLED
         tk.Label(self.button_view, fg="green", text="Model loaded!").pack(anchor=tk.NW)

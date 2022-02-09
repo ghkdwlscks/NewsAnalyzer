@@ -22,12 +22,10 @@ class ButtonView(tk.Frame):
         self.main_controller = None
         self.config_controller = None
 
-        self.load_model_button = tk.Button(
-            self, command=self.load_model_clicked, text="Load model", width=22
-        )
-        self.load_model_button.pack(anchor=tk.NE, pady=(30, 10))
-
         self.buttons = {
+            "load": tk.Button(
+                self, command=self.load_model_clicked, text="Load model", width=22
+            ),
             "run": tk.Button(
                 self, command=self.run_clicked, state=tk.DISABLED, text="Run", width=22
             ),
@@ -39,6 +37,7 @@ class ButtonView(tk.Frame):
             )
         }
 
+        self.buttons["load"].pack(anchor=tk.NE, pady=(30, 10))
         self.buttons["run"].pack(anchor=tk.NE, pady=2)
         self.buttons["cancel"].pack(anchor=tk.NE, pady=(2, 5))
         self.buttons["config"].pack(anchor=tk.SE, pady=2, side=tk.BOTTOM)
@@ -62,8 +61,8 @@ class ButtonView(tk.Frame):
         """Load pretrained FastText model.
         """
 
-        self.load_model_button["state"] = tk.DISABLED
-        self.load_model_button["text"] = "Loading model..."
+        self.buttons["load"]["state"] = tk.DISABLED
+        self.buttons["load"]["text"] = "Loading model..."
         self.buttons["config"]["state"] = tk.DISABLED
 
         threading.Thread(
@@ -131,4 +130,16 @@ class ButtonView(tk.Frame):
         """Open configuration window.
         """
 
-        self.config_controller.config_clicked(self)
+        def update_load_button(old_model, new_model):
+            if old_model == new_model:
+                self.buttons["load"]["state"] = tk.DISABLED
+                self.buttons["load"]["text"] = "Model loaded!"
+                self.buttons["run"]["state"] = tk.NORMAL
+            elif old_model:
+                self.buttons["load"]["state"] = tk.NORMAL
+                self.buttons["load"]["text"] = "Reload model"
+                self.buttons["run"]["state"] = tk.DISABLED
+
+        self.config_controller.config_clicked(
+            self, self.main_controller.lastest_fasttext_model, update_load_button
+        )

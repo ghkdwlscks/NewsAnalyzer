@@ -16,14 +16,22 @@ class ConfigController:
         self.config = config
         self.config_view = None
 
-    def config_clicked(self, parent):
+        self.lastest_fasttext_model = None
+        self.update_load_button = None
+
+    def config_clicked(self, parent, lastest_fasttext_model, update_load_button):
         """Open configuration window.
 
         Args:
             parent (ButtonView): ButtonView object.
+            lastest_fasttext_model (str): Lastest FastText model loaded.
+            update_load_button (Callable[str, str], None)
         """
 
         self.config_view = ConfigView(self, parent)
+
+        self.lastest_fasttext_model = lastest_fasttext_model
+        self.update_load_button = update_load_button
 
     def update(self, section, option, value):
         """Update configurations.
@@ -51,6 +59,8 @@ class ConfigController:
         with open(self.config.config_path, "w", encoding="utf-8") as config_file:
             config_file.write("; Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>\n\n")
             self.config.write(config_file)
+
+        self.update_load_button(self.lastest_fasttext_model, self.config_view.fasttext_path.get())
 
     def keywords_to_include(self):
         """Returns keywords to include.
