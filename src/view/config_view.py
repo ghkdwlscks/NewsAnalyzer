@@ -34,6 +34,14 @@ class ConfigView(tk.Toplevel):
             self, command=self.save_clicked, text="Save", width=10
         ).pack(anchor=tk.NE, padx=(20, 0), side=tk.RIGHT)
 
+        self.configs = {
+            "keywords_to_include": tk.StringVar(value=self.config_controller.keywords_to_include()),
+            "keywords_to_exclude": tk.StringVar(value=self.config_controller.keywords_to_exclude()),
+            "fasttext_path": tk.StringVar(value=self.config_controller.fasttext_path()),
+            "train_enabled": tk.BooleanVar(value=self.config_controller.train_enabled()),
+            "trained_model": tk.StringVar(value=self.config_controller.trained_model())
+        }
+
         keyword_frame = tk.Frame(self)
         keyword_frame.pack(anchor=tk.NW)
 
@@ -42,15 +50,13 @@ class ConfigView(tk.Toplevel):
         ).pack(anchor=tk.NW)
 
         tk.Label(keyword_frame, text="Include").pack(anchor=tk.NW, padx=(10, 0))
-        self.keywords_to_include = tk.StringVar(value=self.config_controller.keywords_to_include())
         tk.Entry(
-            keyword_frame, textvariable=self.keywords_to_include, width=50
+            keyword_frame, textvariable=self.configs["keywords_to_include"], width=50
         ).pack(anchor=tk.NW, padx=(10, 0))
 
         tk.Label(keyword_frame, text="Exclude").pack(anchor=tk.NW, padx=(10, 0))
-        self.keywords_to_exclude = tk.StringVar(value=self.config_controller.keywords_to_exclude())
         tk.Entry(
-            keyword_frame, textvariable=self.keywords_to_exclude, width=50
+            keyword_frame, textvariable=self.configs["keywords_to_exclude"], width=50
         ).pack(anchor=tk.NW, padx=(10, 0))
 
         fasttext_frame = tk.Frame(self)
@@ -61,28 +67,29 @@ class ConfigView(tk.Toplevel):
         ).pack(anchor=tk.NW, pady=(50, 0))
 
         tk.Label(fasttext_frame, text="FastText model path").pack(anchor=tk.NW, padx=(10, 0))
-        self.fasttext_path = tk.StringVar(value=self.config_controller.fasttext_path())
         tk.Entry(
             fasttext_frame,
             readonlybackground="white",
             state="readonly",
-            textvariable=self.fasttext_path,
+            textvariable=self.configs["fasttext_path"],
             width=50
         ).pack(anchor=tk.NW, padx=(10, 0))
         tk.Button(
             fasttext_frame, command=self.browse_clicked, text="Browse"
         ).pack(anchor=tk.E)
 
-        self.train_enabled = tk.BooleanVar(value=self.config_controller.train_enabled())
         tk.Checkbutton(
-            fasttext_frame, text="Enable training", variable=self.train_enabled
+            fasttext_frame,
+            command=self.check_button_clicked,
+            text="Enable training",
+            variable=self.configs["train_enabled"]
         ).pack(anchor=tk.NW, padx=(10, 0))
 
         tk.Label(fasttext_frame, text="Trained model name").pack(anchor=tk.NW, padx=(10, 0))
-        self.trained_model = tk.StringVar(value=self.config_controller.trained_model())
-        tk.Entry(
-            fasttext_frame, textvariable=self.trained_model, width=50
-        ).pack(anchor=tk.NW, padx=(10, 0))
+        self.trained_model_entry = tk.Entry(
+            fasttext_frame, textvariable=self.configs["trained_model"], width=50
+        )
+        self.trained_model_entry.pack(anchor=tk.NW, padx=(10, 0))
 
     def save_clicked(self):
         """Save configurations.
@@ -100,4 +107,13 @@ class ConfigView(tk.Toplevel):
         )
 
         if fasttext_path:
-            self.fasttext_path.set(fasttext_path)
+            self.configs["fasttext_path"].set(fasttext_path)
+
+    def check_button_clicked(self):
+        """Switch the state of trained model entry.
+        """
+
+        if self.configs["train_enabled"].get():
+            self.trained_model_entry["state"] = tk.NORMAL
+        else:
+            self.trained_model_entry["state"] = tk.DISABLED

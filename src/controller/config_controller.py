@@ -48,19 +48,23 @@ class ConfigController:
         """Save configurations file.
         """
 
-        self.update("KEYWORDS", "INCLUDE", self.config_view.keywords_to_include.get())
-        self.update("KEYWORDS", "EXCLUDE", self.config_view.keywords_to_exclude.get())
-        self.update("FASTTEXT", "PATH", self.config_view.fasttext_path.get())
+        self.update("KEYWORDS", "INCLUDE", self.config_view.configs["keywords_to_include"].get())
+        self.update("KEYWORDS", "EXCLUDE", self.config_view.configs["keywords_to_exclude"].get())
+        self.update("FASTTEXT", "PATH", self.config_view.configs["fasttext_path"].get())
         self.update(
-            "FASTTEXT", "TRAIN", "true" if self.config_view.train_enabled.get() else "false"
+            "FASTTEXT",
+            "TRAIN",
+            "true" if self.config_view.configs["train_enabled"].get() else "false"
         )
-        self.update("FASTTEXT", "TRAINED_MODEL", self.config_view.trained_model.get())
+        self.update("FASTTEXT", "TRAINED_MODEL", self.config_view.configs["trained_model"].get())
 
         with open(self.config.config_path, "w", encoding="utf-8") as config_file:
             config_file.write("; Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>\n\n")
             self.config.write(config_file)
 
-        self.update_load_button(self.lastest_fasttext_model, self.config_view.fasttext_path.get())
+        self.update_load_button(
+            self.lastest_fasttext_model, self.config_view.configs["fasttext_path"].get()
+        )
 
     def keywords_to_include(self):
         """Returns keywords to include.
