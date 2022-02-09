@@ -51,8 +51,12 @@ class NewsAnalyzer(tk.Tk):
         # Controllers
         config_controller = ConfigController(config)
         main_controller = MainController(
-            clusterer=clusterer, crawler=crawler, vectorizer=vectorizer,
-            article_view=article_view, button_view=button_view, cluster_view=cluster_view,
+            clusterer=clusterer,
+            crawler=crawler,
+            vectorizer=vectorizer,
+            article_view=article_view,
+            button_view=button_view,
+            cluster_view=cluster_view,
             config_controller=config_controller
         )
         article_view.set_controller(main_controller)
