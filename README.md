@@ -1,6 +1,8 @@
 <!-- Writer: Jinchan Hwang <jchwang@yonsei.ac.kr> -->
 
-# NewsAnalyzer
+# NewsAnalyzer - Korean News Article Clustering
+
+![execution_example](images/execution_example.png?raw=true)
 
 **NewsAnalyzer** crawls and clusters NAVER news articles from given keywords.
 While data preprocessing is the most essential and important part in natural language processing (NLP), since *news articles are well-structured documents*, NewsAnalyzer uses simple and intuitive preprocessing method, exploiting the characteristics of news articles.
