@@ -39,6 +39,10 @@ class MainController:
             run_label.destroy()
         self.button_view.run_labels = []
 
+        self.article_view.article_details.delete("1.0", tk.END)
+        self.article_view.disable_buttons()
+        self.cluster_view.cluster_listbox.delete(0, tk.END)
+
         try:
             self.vectorizer.load_fasttext_model(self.config_controller.fasttext_path())
         except RuntimeError:
@@ -56,7 +60,6 @@ class MainController:
         self.button_view.buttons["load"]["text"] = "Model loaded!"
         self.button_view.buttons["run"]["state"] = tk.NORMAL
         self.button_view.buttons["config"]["state"] = tk.DISABLED
-        tk.Label(self.button_view, fg="green", text="Model loaded!").pack(anchor=tk.NW)
 
     def run(self, num_pages, stop_signal):
         """Run NewsAnalyzer.

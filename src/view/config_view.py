@@ -87,7 +87,10 @@ class ConfigView(tk.Toplevel):
 
         tk.Label(fasttext_frame, text="Trained model name").pack(anchor=tk.NW, padx=(10, 0))
         self.trained_model_entry = tk.Entry(
-            fasttext_frame, textvariable=self.configs["trained_model"], width=50
+            fasttext_frame,
+            state=tk.NORMAL if self.configs["train_enabled"].get() else tk.DISABLED,
+            textvariable=self.configs["trained_model"],
+            width=50
         )
         self.trained_model_entry.pack(anchor=tk.NW, padx=(10, 0))
 
