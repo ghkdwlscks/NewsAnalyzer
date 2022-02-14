@@ -26,13 +26,13 @@ class ConfigView(tk.Toplevel):
         self.title("Configurations")
         self.resizable(False, False)
         self.geometry(
-            f"+{self.parent.parent.winfo_x() + 210}+{self.parent.parent.winfo_y() + 90}"
+            f"+{self.parent.parent.winfo_x() + 175}+{self.parent.parent.winfo_y() + 90}"
         )
         self.focus_set()
 
         tk.Button(
             self, command=self.save_clicked, text="Save", width=10
-        ).pack(anchor=tk.NE, padx=(20, 0), side=tk.RIGHT)
+        ).pack(anchor=tk.NE, padx=(20, 0), pady=20, side=tk.RIGHT)
 
         self.configs = {
             "keywords_to_include": tk.StringVar(value=self.config_controller.keywords_to_include()),
@@ -47,52 +47,64 @@ class ConfigView(tk.Toplevel):
 
         tk.Label(
             keyword_frame, font=("맑은 고딕", 10, tkFont.BOLD), text="Keyword Configurations"
-        ).pack(anchor=tk.NW)
+        ).pack(anchor=tk.NW, pady=(5, 5))
 
-        tk.Label(keyword_frame, text="Include").pack(anchor=tk.NW, padx=(10, 0))
+        tk.Label(keyword_frame, text="Include").pack(anchor=tk.NW, padx=(10, 0), pady=(0, 5))
         tk.Entry(
-            keyword_frame, textvariable=self.configs["keywords_to_include"], width=50
-        ).pack(anchor=tk.NW, padx=(10, 0))
+            keyword_frame, textvariable=self.configs["keywords_to_include"], width=55
+        ).pack(anchor=tk.NW, padx=(10, 0), pady=(0, 5))
 
-        tk.Label(keyword_frame, text="Exclude").pack(anchor=tk.NW, padx=(10, 0))
+        tk.Label(keyword_frame, text="Exclude").pack(anchor=tk.NW, padx=(10, 0), pady=(0, 5))
         tk.Entry(
-            keyword_frame, textvariable=self.configs["keywords_to_exclude"], width=50
-        ).pack(anchor=tk.NW, padx=(10, 0))
+            keyword_frame, textvariable=self.configs["keywords_to_exclude"], width=55
+        ).pack(anchor=tk.NW, padx=(10, 0), pady=(0, 5))
 
         fasttext_frame = tk.Frame(self)
         fasttext_frame.pack(anchor=tk.NW)
 
         tk.Label(
             fasttext_frame, font=("맑은 고딕", 10, tkFont.BOLD), text="FastText Configurations"
-        ).pack(anchor=tk.NW, pady=(50, 0))
+        ).pack(anchor=tk.NW, pady=(50, 5))
 
-        tk.Label(fasttext_frame, text="FastText model path").pack(anchor=tk.NW, padx=(10, 0))
+        tk.Label(
+            fasttext_frame, text="FastText model path"
+        ).pack(anchor=tk.NW, padx=(10, 0), pady=(0, 5))
+        browse_frame = tk.Frame(fasttext_frame)
+        browse_frame.pack(anchor=tk.NW, fill=tk.BOTH)
         tk.Entry(
-            fasttext_frame,
+            browse_frame,
             readonlybackground="white",
             state="readonly",
             textvariable=self.configs["fasttext_path"],
             width=50
-        ).pack(anchor=tk.NW, padx=(10, 0))
+        ).pack(anchor=tk.NW, padx=(10, 5), pady=(0, 5), side=tk.LEFT)
         tk.Button(
-            fasttext_frame, command=self.browse_clicked, text="Browse"
-        ).pack(anchor=tk.E)
+            browse_frame,
+            command=self.browse_clicked,
+            font=("맑은 고딕", 6, tkFont.BOLD),
+            padx=0,
+            pady=0,
+            text=". . .",
+            width=3
+        ).pack(anchor=tk.NE, pady=(0, 5), side=tk.RIGHT)
 
         tk.Checkbutton(
             fasttext_frame,
             command=self.check_button_clicked,
             text="Enable training",
             variable=self.configs["train_enabled"]
-        ).pack(anchor=tk.NW, padx=(10, 0))
+        ).pack(anchor=tk.NW, padx=(10, 0), pady=(0, 5))
 
-        tk.Label(fasttext_frame, text="Trained model name").pack(anchor=tk.NW, padx=(10, 0))
+        tk.Label(
+            fasttext_frame, text="Trained model name"
+        ).pack(anchor=tk.NW, padx=(10, 0), pady=(0, 5))
         self.trained_model_entry = tk.Entry(
             fasttext_frame,
             state=tk.NORMAL if self.configs["train_enabled"].get() else tk.DISABLED,
             textvariable=self.configs["trained_model"],
-            width=50
+            width=55
         )
-        self.trained_model_entry.pack(anchor=tk.NW, padx=(10, 0))
+        self.trained_model_entry.pack(anchor=tk.NW, padx=(10, 0), pady=(0, 5))
 
     def save_clicked(self):
         """Save configurations.
