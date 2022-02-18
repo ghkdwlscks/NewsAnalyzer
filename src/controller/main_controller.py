@@ -59,7 +59,7 @@ class MainController:
         self.button_view.buttons["load"]["font"] = ("맑은 고딕", 10)
         self.button_view.buttons["load"]["text"] = "Model loaded!"
         self.button_view.buttons["run"]["state"] = tk.NORMAL
-        self.button_view.buttons["config"]["state"] = tk.DISABLED
+        self.button_view.buttons["config"]["state"] = tk.NORMAL
 
     def run(self, num_pages, stop_signal):
         """Run NewsAnalyzer.
