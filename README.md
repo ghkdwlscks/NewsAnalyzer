@@ -47,6 +47,19 @@ NewsAnalyzer has following features:
     python3 src/news_analyzer.py
     ```
 
+### Configuring NewsAnalyzer
+
+#### Keyword configurations
+
+* Include: Keywords to include split by ","
+* Exclude: Keywords to exclude split by ","
+
+#### FastText Configurations
+
+* FastText model path: Path of FastText model path (either Facebook pretrained model or trained model via NewsAnalyzer)
+* Enable training: Whether to enable training or not
+* Trained model name: Model name to be saved after training
+
 ## Author
 
 Jinchan Hwang - jchwang@yonsei.ac.kr
