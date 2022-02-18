@@ -94,7 +94,7 @@ class Crawler:
             list[bs4.element.Tag]: List of article tags.
         """
 
-        raw = requests.get(search_url, headers={'User-Agent': 'Mozilla/5.0'})
+        raw = requests.get(search_url, headers={"User-Agent": "Mozilla/5.0"})
         html = BeautifulSoup(raw.text, "lxml")
 
         article_list = [
@@ -220,7 +220,7 @@ class Crawler:
             list[list[str]]: Document split by sentences, then words.
         """
 
-        raw = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+        raw = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
         html = BeautifulSoup(raw.text, "lxml")
         if html.select_one("div._article_body_contents.article_body_contents"):
             document = html.select_one("div._article_body_contents.article_body_contents").text
