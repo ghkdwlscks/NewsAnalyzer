@@ -9,27 +9,20 @@ import requests
 
 class MainController:
     """MainController object.
-
-    Kwargs:
-        clusterer (clusterer): Clusterer object.
-        crawler (Crawler): Crawler object.
-        vectorizer (Vectorizer): Vectorizer object.
-        article_view (ArticleView): ArticleView object.
-        button_view (ButtonView): ButtonView object.
-        cluster_view (ClusterView): ClusterView object.
-        config_controller (ConfigController): ConfigController object.
     """
 
     def __init__(self, **kwargs):
         self.clusterer = kwargs["clusterer"]
         self.crawler = kwargs["crawler"]
         self.vectorizer = kwargs["vectorizer"]
-        self.article_view = kwargs["article_view"]
+        self.browser_view = kwargs["browser_view"]
         self.button_view = kwargs["button_view"]
         self.cluster_view = kwargs["cluster_view"]
         self.config_controller = kwargs["config_controller"]
 
         self.lastest_fasttext_model = None
+
+        self.selected_article = None
 
     def load_fasttext_model(self):
         """Load pretrained FastText model.
@@ -37,10 +30,10 @@ class MainController:
 
         for run_label in self.button_view.run_labels:
             run_label.destroy()
-        self.button_view.run_labels = []
 
-        self.article_view.article_details.delete("1.0", tk.END)
-        self.article_view.disable_buttons()
+        self.button_view.run_labels = []
+        self.button_view.buttons["url"]["state"] = tk.DISABLED
+        self.button_view.buttons["naver_url"]["state"] = tk.DISABLED
         self.cluster_view.cluster_listbox.delete(0, tk.END)
 
         try:
@@ -74,10 +67,10 @@ class MainController:
 
         for run_label in self.button_view.run_labels:
             run_label.destroy()
-        self.button_view.run_labels = []
 
-        self.article_view.article_details.delete("1.0", tk.END)
-        self.article_view.disable_buttons()
+        self.button_view.run_labels = []
+        self.button_view.buttons["url"]["state"] = tk.DISABLED
+        self.button_view.buttons["naver_url"]["state"] = tk.DISABLED
         self.cluster_view.cluster_listbox.delete(0, tk.END)
 
         try:
@@ -201,8 +194,8 @@ class MainController:
 
         self.cluster_view.display_cluster(cluster_list)
 
-    def display_article_details(self, index):
-        """Display article details.
+    def article_clicked(self, index):
+        """Open article.
 
         Args:
             index (int): Index of ClusterView.cluster_listbox.
@@ -212,12 +205,13 @@ class MainController:
         for cluster in self.cluster_view.cluster_list:
             line_count += 2
             if line_count + len(cluster) > index:
-                self.article_view.display_article_details(cluster[index - line_count])
+                if index - line_count < 0:
+                    self.button_view.buttons["url"]["state"] = tk.DISABLED
+                    self.button_view.buttons["naver_url"]["state"] = tk.DISABLED
+                    return
+                self.selected_article = cluster[index - line_count]
+                self.button_view.buttons["url"]["state"] = tk.NORMAL
+                self.button_view.buttons["naver_url"]["state"] = tk.NORMAL
+                self.browser_view.open_browser(self.selected_article.naver_url)
                 return
             line_count += len(cluster)
-
-    def clear_article_details(self):
-        """Clear article details.
-        """
-
-        self.article_view.clear_article_details()

@@ -1,6 +1,7 @@
 # Writer: Jinchan Hwang <jchwang@yonsei.ac.kr>
 
 bs4
+cefpython3
 gensim
 hdbscan
 lxml

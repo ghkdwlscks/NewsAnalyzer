@@ -32,7 +32,8 @@ class Clusterer:
         article_vectors = np.array(article_vectors)
 
         clusters = HDBSCAN(
-            min_samples=self.min_samples, cluster_selection_method="leaf"
+            min_samples=self.min_samples,
+            cluster_selection_method="leaf"
         ).fit_predict(article_vectors)
 
         num_clusters = max(clusters) + 2

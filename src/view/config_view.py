@@ -16,7 +16,7 @@ class ConfigView(tk.Toplevel):
         parent (ButtonView): ButtonView object.
     """
 
-    def __init__(self, config_controller, parent):
+    def __init__(self, config_controller, parent, *args, **kwargs):
         super().__init__(parent, padx=10, pady=10)
 
         self.parent = parent

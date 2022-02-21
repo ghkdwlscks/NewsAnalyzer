@@ -14,12 +14,12 @@ class ClusterView(tk.Frame):
         parent (NewsAnalyzer): NewsAnalyzer object.
     """
 
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
 
         self.main_controller = None
 
-        title = tk.Label(self, font=("맑은 고딕", 13, tkFont.BOLD), text="Clustered Articles")
+        title = tk.Label(self, font=("맑은 고딕", 15, tkFont.BOLD), text="Clustered Articles")
         title.pack(anchor=tk.NW)
 
         scrollbar = tk.Scrollbar(self)
@@ -28,15 +28,15 @@ class ClusterView(tk.Frame):
         self.cluster_list = None
 
         self.cluster_listbox = tk.Listbox(
-            self, font=("맑은 고딕", 10), height=20, width=100, yscrollcommand=scrollbar.set
+            self, font=("맑은 고딕", 10), yscrollcommand=scrollbar.set
         )
-        self.cluster_listbox.pack(anchor=tk.NW, expand=True, fill=tk.X, side=tk.LEFT)
+        self.cluster_listbox.pack(anchor=tk.NW, expand=tk.TRUE, fill=tk.BOTH, side=tk.LEFT)
 
         scrollbar["command"] = self.cluster_listbox.yview
         self.cluster_listbox.bind("<<ListboxSelect>>", self.article_clicked)
 
     def set_controller(self, main_controller):
-        """Set controller
+        """Set controller.
 
         Args:
             main_controller (MainController): MainController object.
@@ -86,7 +86,4 @@ class ClusterView(tk.Frame):
             if selection:
                 index = selection[0]
                 title = event.widget.get(index)
-                if title and not re.match(r"Cluster.*", title):
-                    self.main_controller.display_article_details(index)
-                else:
-                    self.main_controller.clear_article_details()
+                self.main_controller.article_clicked(index)

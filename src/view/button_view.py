@@ -14,8 +14,8 @@ class ButtonView(tk.Frame):
         parent (NewsAnalyzer): NewsAnalyzer object.
     """
 
-    def __init__(self, parent):
-        super().__init__(parent)
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(parent, *args, **kwargs)
 
         self.parent = parent
 
@@ -23,24 +23,42 @@ class ButtonView(tk.Frame):
         self.config_controller = None
 
         self.buttons = {
-            "load": tk.Button(
-                self, command=self.load_model_clicked, text="Load model", width=22
-            ),
+            "load": tk.Button(self, command=self.load_model_clicked, text="Load model", width=22),
             "run": tk.Button(
                 self, command=self.run_clicked, state=tk.DISABLED, text="Run", width=22
             ),
             "cancel": tk.Button(
                 self, command=self.cancel_clicked, state=tk.DISABLED, text="Cancel", width=22
             ),
-            "config": tk.Button(
-                self, command=self.config_clicked, text="Configurations", width=22
-            )
+            "url": tk.Button(
+                self,
+                command=lambda:self.update_clipboard(
+                    self.main_controller.selected_article.origin_url
+                ),
+                state=tk.DISABLED,
+                text="Copy URL",
+                width=22
+            ),
+            "naver_url": tk.Button(
+                self,
+                command=lambda: self.update_clipboard(
+                    self.main_controller.selected_article.naver_url
+                ),
+                state=tk.DISABLED,
+                text="Copy NAVER URL",
+                width=22
+            ),
+            "config": tk.Button(self, command=self.config_clicked, text="Configurations", width=22),
+            "exit": tk.Button(self, command=self.exit_clicked, text="Exit", width=22)
         }
 
-        self.buttons["load"].pack(anchor=tk.NE, pady=(30, 10))
-        self.buttons["run"].pack(anchor=tk.NE, pady=2)
-        self.buttons["cancel"].pack(anchor=tk.NE, pady=(2, 5))
-        self.buttons["config"].pack(anchor=tk.SE, pady=2, side=tk.BOTTOM)
+        self.buttons["load"].pack(anchor=tk.NW, pady=(30, 10))
+        self.buttons["run"].pack(anchor=tk.NW, pady=2)
+        self.buttons["cancel"].pack(anchor=tk.NW, pady=(2, 30))
+        self.buttons["url"].pack(anchor=tk.NW, pady=2)
+        self.buttons["naver_url"].pack(anchor=tk.NW, pady=2)
+        self.buttons["config"].pack(anchor=tk.NW, pady=(30, 2))
+        self.buttons["exit"].pack(anchor=tk.NW, pady=(30, 50))
 
         self.stop_signal = False
 
@@ -126,6 +144,16 @@ class ButtonView(tk.Frame):
 
         self.stop_signal = True
 
+    def update_clipboard(self, url):
+        """Update clipboard.
+
+        Args:
+            url (str): URL of the article.
+        """
+
+        self.parent.clipboard_clear()
+        self.parent.clipboard_append(url)
+
     def config_clicked(self):
         """Open configuration window.
         """
@@ -143,3 +171,9 @@ class ButtonView(tk.Frame):
         self.config_controller.config_clicked(
             self, self.main_controller.lastest_fasttext_model, update_load_button
         )
+
+    def exit_clicked(self):
+        """Exit NewsAnalyzer.
+        """
+
+        self.parent.destroy()
