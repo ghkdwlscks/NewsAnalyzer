@@ -45,7 +45,11 @@ NewsAnalyzer has following features:
 * Executing NewsAnalyzer
 
     ``` sh
+    # Execute NewsAnalyzer directly from Python3 interpreter.
     python3 src/news_analyzer.py
+
+    # Or install NewsAnalyzer executable.
+    pyinstaller news_analyzer.spec
     ```
 
 ### Configuring NewsAnalyzer
