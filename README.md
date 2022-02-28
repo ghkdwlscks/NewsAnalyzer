@@ -12,6 +12,7 @@ NewsAnalyzer has following features:
 
 * Unsupervised news article clustering
 * Keyword-specific word vector model training
+* Embedded Chromium web browser which shows selected news article
 
 ## Getting Started
 
