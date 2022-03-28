@@ -15,8 +15,8 @@ from bs4 import BeautifulSoup
 from model.article import Article
 
 
-class Crawler:
-    """Crawler object.
+class NewsCrawler:
+    """NewsCrawler object.
     """
 
     def __init__(self):
@@ -210,17 +210,17 @@ class Crawler:
         return origin_url, naver_url
 
     @classmethod
-    def get_document(cls, url):
+    def get_document(cls, naver_url):
         """Get document of article from the given URL.
 
         Args:
-            url (str): NAVER URL of the article.
+            naver_url (str): NAVER URL of the article.
 
         Returns:
             list[list[str]]: Document split by sentences, then words.
         """
 
-        raw = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
+        raw = requests.get(naver_url, headers={"User-Agent": "Mozilla/5.0"})
         html = BeautifulSoup(raw.text, "lxml")
         if html.select_one("div._article_body_contents.article_body_contents"):
             document = html.select_one("div._article_body_contents.article_body_contents").text
@@ -250,6 +250,6 @@ class Crawler:
             document = [[]]
             file_name = "error_" + datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + ".txt"
             with open(file_name, "w", encoding="utf-8") as error_log:
-                error_log.write("Error URL: " + url)
+                error_log.write("Error URL: " + naver_url)
 
         return [sentence.split() for sentence in sentences]

@@ -2,7 +2,6 @@
 """
 
 
-import re
 import tkinter as tk
 import tkinter.font as tkFont
 
@@ -17,7 +16,7 @@ class ClusterView(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
 
-        self.main_controller = None
+        self.news_controller = None
 
         title = tk.Label(self, font=("맑은 고딕", 15, tkFont.BOLD), text="Clustered Articles")
         title.pack(anchor=tk.NW)
@@ -28,23 +27,23 @@ class ClusterView(tk.Frame):
         self.cluster_list = None
 
         self.cluster_listbox = tk.Listbox(
-            self, font=("맑은 고딕", 10), yscrollcommand=scrollbar.set
+            self, font=("맑은 고딕", 10), takefocus=tk.FALSE, yscrollcommand=scrollbar.set
         )
         self.cluster_listbox.pack(anchor=tk.NW, expand=tk.TRUE, fill=tk.BOTH, side=tk.LEFT)
 
         scrollbar["command"] = self.cluster_listbox.yview
         self.cluster_listbox.bind("<<ListboxSelect>>", self.article_clicked)
 
-    def set_controller(self, main_controller):
+    def set_controller(self, news_controller):
         """Set controller.
 
         Args:
-            main_controller (MainController): MainController object.
+            news_controller (NewsController): NewsController object.
         """
 
-        self.main_controller = main_controller
+        self.news_controller = news_controller
 
-    def display_cluster(self, cluster_list):
+    def display_clusters(self, cluster_list):
         """Dispaly clustered articles.
 
         Args:
@@ -75,7 +74,7 @@ class ClusterView(tk.Frame):
                 self.cluster_listbox.insert(tk.END, article.press + " " * padding + article.title)
 
     def article_clicked(self, event):
-        """Display article details.
+        """Open article.
 
         Args:
             event (tkinter.Event): Current event.
@@ -85,5 +84,4 @@ class ClusterView(tk.Frame):
             selection = event.widget.curselection()
             if selection:
                 index = selection[0]
-                title = event.widget.get(index)
-                self.main_controller.article_clicked(index)
+                self.news_controller.article_clicked(index)

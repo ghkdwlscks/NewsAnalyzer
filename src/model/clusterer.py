@@ -12,13 +12,13 @@ class Clusterer:
     Args:
         min_cluster_size (int, optional): Minimum number of articles to form a cluster.
                                           Larger min_cluster_size generates larger cluster.
-                                          Defaults to 3.
+                                          Defaults to 2.
         min_samples (int, optional): Minimum number of neighbors to be a core point.
                                      Larger min_samples generates more noises.
                                      Defaults to 2.
     """
 
-    def __init__(self, min_cluster_size=3, min_samples=2):
+    def __init__(self, min_cluster_size=2, min_samples=2):
         self.min_cluster_size = min_cluster_size
         self.min_samples = min_samples
 

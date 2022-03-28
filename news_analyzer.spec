@@ -7,7 +7,7 @@
 block_cipher = None
 
 
-a = Analysis(['src\\news_analyzer.py'],
+a = Analysis(['src\\py'],
              pathex=['src'],
              binaries=[],
              datas=[],

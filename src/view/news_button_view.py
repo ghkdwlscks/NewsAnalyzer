@@ -7,8 +7,8 @@ import tkinter as tk
 import tkinter.messagebox as tkMessageBox
 
 
-class ButtonView(tk.Frame):
-    """ButtonView object.
+class NewsButtonView(tk.Frame):
+    """NewsButtonView object.
 
     Args:
         parent (NewsAnalyzer): NewsAnalyzer object.
@@ -19,37 +19,62 @@ class ButtonView(tk.Frame):
 
         self.parent = parent
 
-        self.main_controller = None
+        self.news_controller = None
         self.config_controller = None
 
         self.buttons = {
-            "load": tk.Button(self, command=self.load_model_clicked, text="Load model", width=22),
+            "load": tk.Button(
+                self,
+                command=self.load_model_clicked,
+                takefocus=tk.FALSE,
+                text="Load model",
+                width=22),
             "run": tk.Button(
-                self, command=self.run_clicked, state=tk.DISABLED, text="Run", width=22
+                self,
+                command=self.run_clicked,
+                state=tk.DISABLED,
+                takefocus=tk.FALSE,
+                text="Run",
+                width=22
             ),
             "cancel": tk.Button(
-                self, command=self.cancel_clicked, state=tk.DISABLED, text="Cancel", width=22
+                self,
+                command=self.cancel_clicked,
+                state=tk.DISABLED,
+                takefocus=tk.FALSE,
+                text="Cancel",
+                width=22
             ),
             "url": tk.Button(
                 self,
                 command=lambda:self.update_clipboard(
-                    self.main_controller.selected_article.origin_url
+                    self.news_controller.selected_article.origin_url
                 ),
                 state=tk.DISABLED,
+                takefocus=tk.FALSE,
                 text="Copy URL",
                 width=22
             ),
             "naver_url": tk.Button(
                 self,
                 command=lambda: self.update_clipboard(
-                    self.main_controller.selected_article.naver_url
+                    self.news_controller.selected_article.naver_url
                 ),
                 state=tk.DISABLED,
+                takefocus=tk.FALSE,
                 text="Copy NAVER URL",
                 width=22
             ),
-            "config": tk.Button(self, command=self.config_clicked, text="Configurations", width=22),
-            "exit": tk.Button(self, command=self.exit_clicked, text="Exit", width=22)
+            "config": tk.Button(
+                self,
+                command=self.config_clicked,
+                takefocus=tk.FALSE,
+                text="Configurations",
+                width=22
+            ),
+            "exit": tk.Button(
+                self, command=self.exit_clicked, takefocus=tk.FALSE, text="Exit", width=22
+            )
         }
 
         self.buttons["load"].pack(anchor=tk.NW, pady=(30, 10))
@@ -64,15 +89,15 @@ class ButtonView(tk.Frame):
 
         self.run_labels = []
 
-    def set_controllers(self, main_controller, config_controller):
+    def set_controllers(self, news_controller, config_controller):
         """Set controllers.
 
         Args:
-            main_controller (MainController): MainController object.
+            news_controller (NewsController): NewsController object.
             config_controller (ConfigController): ConfigController object.
         """
 
-        self.main_controller = main_controller
+        self.news_controller = news_controller
         self.config_controller = config_controller
 
     def load_model_clicked(self):
@@ -84,7 +109,7 @@ class ButtonView(tk.Frame):
         self.buttons["config"]["state"] = tk.DISABLED
 
         threading.Thread(
-            target=self.main_controller.load_fasttext_model,
+            target=self.news_controller.load_fasttext_model,
             daemon=True
         ).start()
 
@@ -130,8 +155,8 @@ class ButtonView(tk.Frame):
             self.buttons["config"]["state"] = tk.DISABLED
             self.stop_signal = False
             threading.Thread(
-                target=self.main_controller.run,
-                args=[int(num_pages.get()), lambda: self.stop_signal],
+                target=self.news_controller.run,
+                args=(int(num_pages.get()), lambda: self.stop_signal),
                 daemon=True
             ).start()
             run_window.destroy()
@@ -169,11 +194,11 @@ class ButtonView(tk.Frame):
                 self.buttons["run"]["state"] = tk.DISABLED
 
         self.config_controller.config_clicked(
-            self, self.main_controller.lastest_fasttext_model, update_load_button
+            self, self.news_controller.lastest_fasttext_model, update_load_button
         )
 
     def exit_clicked(self):
-        """Exit NewsAnalyzer.
+        """Exit Program.
         """
 
-        self.parent.destroy()
+        self.parent.parent.destroy()

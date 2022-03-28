@@ -12,7 +12,7 @@ class BrowserView(tk.Frame):
     """BrowserView object.
 
     Args:
-        parent (NewsAnalyzer): NewsAnalyzer object.
+        parent (tk.Frame): tkinter.Frame object.
     """
 
     def __init__(self, parent, *args, **kwargs):
@@ -20,24 +20,24 @@ class BrowserView(tk.Frame):
 
         self.parent = parent
 
-        self.main_controller = None
+        self.news_controller = None
 
-        title = tk.Label(self, font=("맑은 고딕", 15, tkFont.BOLD), text="Article")
+        title = tk.Label(self, font=("맑은 고딕", 15, tkFont.BOLD), text="Browser")
         title.pack(anchor=tk.NW)
 
-        self.browser_frame = tk.Frame(self, width=self.parent.winfo_width() / 2)
+        self.browser_frame = tk.Frame(self, width=1080)
         self.browser_frame.pack(expand=tk.TRUE, fill=tk.BOTH)
 
         self.browser = None
 
-    def set_controller(self, main_controller):
+    def set_controller(self, news_controller):
         """Set controller.
 
         Args:
-            main_controller (MainController): MainController object.
+            news_controller (NewsController): NewsController object.
         """
 
-        self.main_controller = main_controller
+        self.news_controller = news_controller
 
     def open_browser(self, url):
         """Open article.

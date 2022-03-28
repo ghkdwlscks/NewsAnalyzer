@@ -23,12 +23,12 @@ class ConfigController:
         """Open configuration window.
 
         Args:
-            parent (ButtonView): ButtonView object.
+            parent (NewsButtonView): NewsButtonView object.
             lastest_fasttext_model (str): Lastest FastText model loaded.
             update_load_button (Callable[str, str], None)
         """
 
-        self.config_view = ConfigView(self, parent)
+        self.config_view = ConfigView(self, parent, padx=10, pady=10)
 
         self.lastest_fasttext_model = lastest_fasttext_model
         self.update_load_button = update_load_button
