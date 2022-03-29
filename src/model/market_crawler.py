@@ -97,18 +97,20 @@ class MarketCrawler:
             MarketPost: MarketPost object.
         """
 
-        re_error = re.compile(r"errorCode")
-        re_clubid = re.compile(r"(?<=clubid=)[0-9]+")
-        re_articleid = re.compile(r"(?<=ArticleRead\.nhn\?articleid=)[0-9]+")
-        re_title = re.compile(r"(?<=\"subject\":\").*?(?=\",\")")
-        re_phone = re.compile(r"(?<=\"phoneNo\":\")[0-9-]+")
-        re_email = re.compile(r"(?<=\"email\":\").+?(?=\")")
+        re_compiled = {
+            "error": re.compile(r"errorCode"),
+            "clubid": re.compile(r"(?<=clubid=)[0-9]+"),
+            "articleid": re.compile(r"(?<=ArticleRead\.nhn\?articleid=)[0-9]+"),
+            "title": re.compile(r"(?<=\"subject\":\").*?(?=\",\")"),
+            "phone": re.compile(r"(?<=\"phoneNo\":\")[0-9-]+"),
+            "email": re.compile(r"(?<=\"email\":\").+?(?=\")")
+        }
 
         raw = requests.get(post_url, headers={"User-Agent": "Mozilla/5.0"})
         html = BeautifulSoup(raw.text, "lxml")
 
-        clubid = re.search(re_clubid, raw.text).group()
-        articleid = re.search(re_articleid, raw.text).group()
+        clubid = re.search(re_compiled["clubid"], raw.text).group()
+        articleid = re.search(re_compiled["articleid"], raw.text).group()
 
         document_url = (
             "https://apis.naver.com/cafe-web/cafe-articleapi/v2/cafes/"
@@ -120,13 +122,13 @@ class MarketCrawler:
         raw_text = re.sub(r"\\(?=\")", "", raw_text)
         html = BeautifulSoup(raw_text, "lxml")
 
-        if re.search(re_error, raw_text):
+        if re.search(re_compiled["error"], raw_text):
             return None
 
-        title = re.search(re_title, raw_text).group()
-        phone_match = re.search(re_phone, raw_text)
+        title = re.search(re_compiled["title"], raw_text).group()
+        phone_match = re.search(re_compiled["phone"], raw_text)
         phone = phone_match.group() if phone_match else "Unknown"
-        email_match = re.search(re_email, raw_text)
+        email_match = re.search(re_compiled["email"], raw_text)
         email = email_match.group() if email_match else "Unknown"
         document = "\n".join([line.text for line in html.select("p.se-text-paragraph")])
 

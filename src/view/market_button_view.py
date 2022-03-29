@@ -67,7 +67,7 @@ class MarketButtonView(tk.Frame):
         run_window.geometry(f"+{self.parent.winfo_x() + 365}+{self.parent.winfo_y() + 90}")
 
         tk.Label(
-            run_window, text="Input the number of pages to be crawled. (1-1000)"
+            run_window, text="Input the number of pages to be crawled. (1-100)"
         ).pack(pady=(0, 5))
 
         num_pages = tk.StringVar()
@@ -93,7 +93,7 @@ class MarketButtonView(tk.Frame):
         """
 
         try:
-            if int(num_pages.get()) not in range(1, 1001):
+            if int(num_pages.get()) not in range(1, 101):
                 raise ValueError
             self.buttons["run"]["state"] = tk.DISABLED
             self.stop_signal = False
@@ -104,7 +104,7 @@ class MarketButtonView(tk.Frame):
             ).start()
             run_window.destroy()
         except ValueError:
-            tkMessageBox.showerror("Error", "Input should be 1-1000!", parent=run_window)
+            tkMessageBox.showerror("Error", "Input should be 1-100!", parent=run_window)
 
     def cancel_clicked(self):
         """Set stop signal.
