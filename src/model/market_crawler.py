@@ -14,12 +14,10 @@ class MarketCrawler:
     """MarketCrawler object.
     """
 
-    def __init__(self):
-        self.url_prefix = (
-            "https://search.naver.com/search.naver?sm=tab_hty.top&where=articlec&query="
-        )
-        self.url_postfix = "&st=date"
-        self.keyword_fix = None
+    url_prefix = (
+        "https://search.naver.com/search.naver?sm=tab_hty.top&where=articlec&query="
+    )
+    url_postfix = "&st=date"
 
     def run(self, num_pages, stop_signal):
         """Crawl posts from the given number of pages.
@@ -35,13 +33,13 @@ class MarketCrawler:
         post_list = []
 
         keywords = ["군복", "군수품", "군용", "군용마스크", "방독면", "실탄", "육군", "전투화", "탄피"]
-        self.keyword_fix = "+%7C+".join(keywords)
+        keyword_fix = "+%7C+".join(keywords)
 
-        search_url_list = [self.get_page_url(index) for index in range(num_pages)]
+        search_url_list = [self.get_page_url(keyword_fix, index) for index in range(num_pages)]
         post_url_list = []
 
         for search_url in search_url_list:
-            post_url_list += self.get_post_list(search_url)
+            post_url_list += self.get_post_url_list(search_url)
             if stop_signal():
                 raise InterruptedError
 
@@ -54,10 +52,12 @@ class MarketCrawler:
 
         return post_list
 
-    def get_page_url(self, page_index):
+    @classmethod
+    def get_page_url(cls, keyword_fix, page_index):
         """Get page URL of the index.
 
         Args:
+            keyword_fix (str): Keyword query.
             page_index (int): Page index.
 
         Returns:
@@ -66,10 +66,10 @@ class MarketCrawler:
 
         page_postfix = "&start=" + str(page_index * 10 + 1)
 
-        return self.url_prefix + self.keyword_fix + self.url_postfix + page_postfix
+        return cls.url_prefix + keyword_fix + cls.url_postfix + page_postfix
 
     @classmethod
-    def get_post_list(cls, search_url):
+    def get_post_url_list(cls, search_url):
         """Get post tag list from the given URL.
 
         Args:
@@ -82,9 +82,9 @@ class MarketCrawler:
         raw = requests.get(search_url, headers={"User-Agent": "Mozilla/5.0"})
         html = BeautifulSoup(raw.text, "lxml")
 
-        post_list = [article.attrs["href"] for article in html.select("div.total_area > a")]
+        post_url_list = [article.attrs["href"] for article in html.select("div.total_area > a")]
 
-        return post_list
+        return post_url_list
 
     @classmethod
     def get_post(cls, post_url):

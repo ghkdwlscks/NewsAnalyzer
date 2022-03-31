@@ -19,10 +19,8 @@ class NewsCrawler:
     """NewsCrawler object.
     """
 
-    def __init__(self):
-        self.url_prefix = "https://search.naver.com/search.naver?where=news&query="
-        self.url_postfix = "&nso=so%3Add%2Cp%3Aall"
-        self.keyword_fix = None
+    url_prefix = "https://search.naver.com/search.naver?where=news&query="
+    url_postfix = "&nso=so%3Add%2Cp%3Aall"
 
     def run(self, num_pages, keywords, update_progress, stop_signal):
         """Crawl articles from the given number of pages.
@@ -37,19 +35,19 @@ class NewsCrawler:
             list[Article]: List of Article objects.
         """
 
-        self.keyword_fix = keywords[0].replace(",", "+%7C+")
+        keyword_fix = keywords[0].replace(",", "+%7C+")
         if keywords[1]:
-            self.keyword_fix += "+-"
-            self.keyword_fix += keywords[1].replace(",", "+-")
+            keyword_fix += "+-"
+            keyword_fix += keywords[1].replace(",", "+-")
 
-        search_url_list = [self.get_page_url(index) for index in range(num_pages)]
+        search_url_list = [self.get_page_url(keyword_fix, index) for index in range(num_pages)]
 
         with ThreadPool(psutil.cpu_count()) as pool:
             num_targets = Value("i", 0)
-            get_article_list = partial(
-                self.get_article_list, num_targets, update_progress, stop_signal
+            get_article_tag_list = partial(
+                self.get_article_tag_list, num_targets, update_progress, stop_signal
             )
-            target_articles = pool.map(get_article_list, search_url_list)
+            target_articles = pool.map(get_article_tag_list, search_url_list)
         target_articles = [article for page in target_articles for article in page]
         target_articles = self.eliminate_duplicates(target_articles)
         target_articles.reverse()
@@ -66,10 +64,12 @@ class NewsCrawler:
 
         return article_list
 
-    def get_page_url(self, page_index):
+    @classmethod
+    def get_page_url(cls, keyword_fix, page_index):
         """Get page URL of the index.
 
         Args:
+            keyword_fix (str): Keyword query.
             page_index (int): Page index.
 
         Returns:
@@ -78,10 +78,10 @@ class NewsCrawler:
 
         page_postfix = "&start=" + str(page_index * 10 + 1)
 
-        return self.url_prefix + self.keyword_fix + self.url_postfix + page_postfix
+        return cls.url_prefix + keyword_fix + cls.url_postfix + page_postfix
 
     @classmethod
-    def get_article_list(cls, num_targets, update_progress, stop_signal, search_url):
+    def get_article_tag_list(cls, num_targets, update_progress, stop_signal, search_url):
         """Get article tag list from the given URL.
 
         Args:
@@ -97,7 +97,7 @@ class NewsCrawler:
         raw = requests.get(search_url, headers={"User-Agent": "Mozilla/5.0"})
         html = BeautifulSoup(raw.text, "lxml")
 
-        article_list = [
+        article_tag_list = [
             article for article in html.select("ul.list_news > li") if cls.get_urls(article)[1]
         ]
 
@@ -108,7 +108,7 @@ class NewsCrawler:
             num_targets.value += len(article_list)
             update_progress(num_targets.value, 0)
 
-        return article_list
+        return article_tag_list
 
     @classmethod
     def eliminate_duplicates(cls, target_articles):
