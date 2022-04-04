@@ -53,5 +53,4 @@ class NewsAnalyzer(tk.Frame):
             config_controller=config_controller
         )
         button_view.set_controllers(news_controller, config_controller)
-        browser_view.set_controller(news_controller)
         cluster_view.set_controller(news_controller)

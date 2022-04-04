@@ -224,8 +224,15 @@ class NewsController:
                     self.views["button"].buttons["naver_url"]["state"] = tk.DISABLED
                     return
                 self.selected_article = cluster[index - line_count]
+                self.views["button"].buttons["pdf"]["state"] = tk.NORMAL
                 self.views["button"].buttons["url"]["state"] = tk.NORMAL
                 self.views["button"].buttons["naver_url"]["state"] = tk.NORMAL
                 self.views["browser"].open_browser(self.selected_article.naver_url)
                 return
             line_count += len(cluster)
+
+    def save_pdf(self):
+        """Save PDF.
+        """
+
+        self.views["browser"].browser.Print()

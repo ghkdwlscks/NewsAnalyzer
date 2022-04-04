@@ -105,7 +105,7 @@ class NewsCrawler:
             raise InterruptedError
 
         with num_targets.get_lock():
-            num_targets.value += len(article_list)
+            num_targets.value += len(article_tag_list)
             update_progress(num_targets.value, 0)
 
         return article_tag_list

@@ -45,6 +45,14 @@ class NewsButtonView(tk.Frame):
                 text="Cancel",
                 width=22
             ),
+            "pdf": tk.Button(
+                self,
+                command=self.pdf_clicked,
+                state=tk.DISABLED,
+                takefocus=tk.FALSE,
+                text="Save PDF",
+                width=22
+            ),
             "url": tk.Button(
                 self,
                 command=lambda:self.update_clipboard(
@@ -80,6 +88,7 @@ class NewsButtonView(tk.Frame):
         self.buttons["load"].pack(anchor=tk.NW, pady=(30, 10))
         self.buttons["run"].pack(anchor=tk.NW, pady=2)
         self.buttons["cancel"].pack(anchor=tk.NW, pady=(2, 30))
+        self.buttons["pdf"].pack(anchor=tk.NW, pady=2)
         self.buttons["url"].pack(anchor=tk.NW, pady=2)
         self.buttons["naver_url"].pack(anchor=tk.NW, pady=2)
         self.buttons["config"].pack(anchor=tk.NW, pady=(30, 2))
@@ -168,6 +177,12 @@ class NewsButtonView(tk.Frame):
         """
 
         self.stop_signal = True
+
+    def pdf_clicked(self):
+        """Save PDF.
+        """
+
+        self.news_controller.save_pdf()
 
     def update_clipboard(self, url):
         """Update clipboard.

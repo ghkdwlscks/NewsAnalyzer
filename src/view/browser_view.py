@@ -30,15 +30,6 @@ class BrowserView(tk.Frame):
 
         self.browser = None
 
-    def set_controller(self, news_controller):
-        """Set controller.
-
-        Args:
-            news_controller (NewsController): NewsController object.
-        """
-
-        self.news_controller = news_controller
-
     def open_browser(self, url):
         """Open article.
 
@@ -53,6 +44,7 @@ class BrowserView(tk.Frame):
                 [0, 0, self.browser_frame.winfo_width(), self.browser_frame.winfo_height()]
             )
             self.browser = cef.CreateBrowserSync(window_info, url=url)
+
             self.loop()
         else:
             self.browser.LoadUrl(url)
