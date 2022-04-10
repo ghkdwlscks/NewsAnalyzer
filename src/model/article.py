@@ -14,6 +14,7 @@ class Article:
     Args:
         title (str): Title.
         press (str): Press.
+        time (str): Time.
         origin_url (str): Origin URL.
         naver_url (str): NAVER URL.
         document (list[list[str]]): Document split by sentences, then words.
@@ -22,6 +23,7 @@ class Article:
 
     title: str
     press: str
+    time: str
     origin_url: str
     naver_url: str
     document: list[list[str]]

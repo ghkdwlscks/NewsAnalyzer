@@ -148,7 +148,7 @@ class NewsCrawler:
         title = cls.get_title(article)
         press = cls.get_press(article)
         origin_url, naver_url = cls.get_urls(article)
-        document = cls.get_document(naver_url)
+        time, document = cls.get_time_and_document(naver_url)
 
         if stop_signal():
             raise InterruptedError
@@ -157,7 +157,7 @@ class NewsCrawler:
             num_processed.value += 1
             update_progress(num_processed.value)
 
-        return Article(title, press, origin_url, naver_url, document)
+        return Article(title, press, time, origin_url, naver_url, document)
 
     @classmethod
     def get_title(cls, article):
@@ -209,18 +209,21 @@ class NewsCrawler:
         return origin_url, naver_url
 
     @classmethod
-    def get_document(cls, naver_url):
-        """Get document of article from the given URL.
+    def get_time_and_document(cls, naver_url):
+        """Get time and document of article from the given URL.
 
         Args:
             naver_url (str): NAVER URL of the article.
 
         Returns:
-            list[list[str]]: Document split by sentences, then words.
+            tuple[str, list[list[str]]]: Document split by sentences, then words.
         """
 
         raw = requests.get(naver_url, headers={"User-Agent": "Mozilla/5.0"})
         html = BeautifulSoup(raw.text, "lxml")
+
+        time = html.select("span.t11")[-1].text
+
         if html.select_one("div._article_body_contents.article_body_contents"):
             document = html.select_one("div._article_body_contents.article_body_contents").text
         elif html.select_one("div.article_body"):
@@ -248,4 +251,4 @@ class NewsCrawler:
         except UnboundLocalError:
             return [[]]
 
-        return [sentence.split() for sentence in sentences]
+        return time, [sentence.split() for sentence in sentences]
