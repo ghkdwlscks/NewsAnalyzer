@@ -45,32 +45,20 @@ class NewsButtonView(tk.Frame):
                 text="Cancel",
                 width=22
             ),
+            "add": tk.Button(
+                self,
+                command=self.add_clicked,
+                takefocus=tk.FALSE,
+                state=tk.DISABLED,
+                text="Add to list",
+                width=22
+            ),
             "pdf": tk.Button(
                 self,
                 command=self.pdf_clicked,
                 state=tk.DISABLED,
                 takefocus=tk.FALSE,
                 text="Save PDF",
-                width=22
-            ),
-            "url": tk.Button(
-                self,
-                command=lambda:self.update_clipboard(
-                    self.news_controller.selected_article.origin_url
-                ),
-                state=tk.DISABLED,
-                takefocus=tk.FALSE,
-                text="Copy URL",
-                width=22
-            ),
-            "naver_url": tk.Button(
-                self,
-                command=lambda: self.update_clipboard(
-                    self.news_controller.selected_article.naver_url
-                ),
-                state=tk.DISABLED,
-                takefocus=tk.FALSE,
-                text="Copy NAVER URL",
                 width=22
             ),
             "config": tk.Button(
@@ -82,17 +70,42 @@ class NewsButtonView(tk.Frame):
             ),
             "exit": tk.Button(
                 self, command=self.exit_clicked, takefocus=tk.FALSE, text="Exit", width=22
+            ),
+            "text": tk.Button(
+                self,
+                command=self.text_clicked,
+                state=tk.DISABLED,
+                takefocus=tk.FALSE,
+                text="Export text format",
+                width=22
+            ),
+            "report": tk.Button(
+                self,
+                state=tk.DISABLED,
+                takefocus=tk.FALSE,
+                text="Export report format",
+                width=22
+            ),
+            "delete": tk.Button(
+                self,
+                command=self.delete_clicked,
+                state=tk.DISABLED,
+                takefocus=tk.FALSE,
+                text="Delete",
+                width=22
             )
         }
 
         self.buttons["load"].pack(anchor=tk.NW, pady=(30, 10))
         self.buttons["run"].pack(anchor=tk.NW, pady=2)
         self.buttons["cancel"].pack(anchor=tk.NW, pady=(2, 30))
+        self.buttons["add"].pack(anchor=tk.NW, pady=2)
         self.buttons["pdf"].pack(anchor=tk.NW, pady=2)
-        self.buttons["url"].pack(anchor=tk.NW, pady=2)
-        self.buttons["naver_url"].pack(anchor=tk.NW, pady=2)
         self.buttons["config"].pack(anchor=tk.NW, pady=(30, 2))
         self.buttons["exit"].pack(anchor=tk.NW, pady=(30, 50))
+        self.buttons["delete"].pack(anchor=tk.SW, pady=(2, 60), side=tk.BOTTOM)
+        self.buttons["report"].pack(anchor=tk.SW, pady=(2, 30), side=tk.BOTTOM)
+        self.buttons["text"].pack(anchor=tk.SW, pady=2, side=tk.BOTTOM)
 
         self.stop_signal = False
 
@@ -178,21 +191,17 @@ class NewsButtonView(tk.Frame):
 
         self.stop_signal = True
 
+    def add_clicked(self):
+        """Add selected article to selection list.
+        """
+
+        self.news_controller.add_to_list()
+
     def pdf_clicked(self):
         """Save PDF.
         """
 
         self.news_controller.save_pdf()
-
-    def update_clipboard(self, url):
-        """Update clipboard.
-
-        Args:
-            url (str): URL of the article.
-        """
-
-        self.parent.clipboard_clear()
-        self.parent.clipboard_append(url)
 
     def config_clicked(self):
         """Open configuration window.
@@ -217,3 +226,15 @@ class NewsButtonView(tk.Frame):
         """
 
         self.parent.parent.destroy()
+
+    def text_clicked(self):
+        """Export text format.
+        """
+
+        self.news_controller.export_text_format()
+
+    def delete_clicked(self):
+        """Delete selected article from selection list.
+        """
+
+        self.news_controller.delete_from_list()

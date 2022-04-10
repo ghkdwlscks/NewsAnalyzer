@@ -11,8 +11,9 @@ from model.config import Config
 from model.news_crawler import NewsCrawler
 from model.vectorizer import Vectorizer
 from view.browser_view import BrowserView
-from view.news_button_view import NewsButtonView
 from view.cluster_view import ClusterView
+from view.news_button_view import NewsButtonView
+from view.selection_view import SelectionView
 
 
 class NewsAnalyzer(tk.Frame):
@@ -40,6 +41,8 @@ class NewsAnalyzer(tk.Frame):
         button_view.pack(fill=tk.BOTH, padx=10, pady=10, side=tk.RIGHT)
         cluster_view = ClusterView(self)
         cluster_view.pack(expand=tk.TRUE, fill=tk.BOTH, padx=10, pady=10)
+        selection_view = SelectionView(self)
+        selection_view.pack(fill=tk.BOTH, padx=10, pady=10)
 
         # Controllers
         config_controller = ConfigController(config)
@@ -50,7 +53,9 @@ class NewsAnalyzer(tk.Frame):
             browser_view=browser_view,
             button_view=button_view,
             cluster_view=cluster_view,
+            selection_view=selection_view,
             config_controller=config_controller
         )
         button_view.set_controllers(news_controller, config_controller)
         cluster_view.set_controller(news_controller)
+        selection_view.set_controller(news_controller)

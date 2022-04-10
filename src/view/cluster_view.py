@@ -29,7 +29,7 @@ class ClusterView(tk.Frame):
         self.cluster_listbox = tk.Listbox(
             self, font=("맑은 고딕", 10), takefocus=tk.FALSE, yscrollcommand=scrollbar.set
         )
-        self.cluster_listbox.pack(anchor=tk.NW, expand=tk.TRUE, fill=tk.BOTH, side=tk.LEFT)
+        self.cluster_listbox.pack(anchor=tk.NW, expand=tk.TRUE, fill=tk.BOTH)
 
         scrollbar["command"] = self.cluster_listbox.yview
         self.cluster_listbox.bind("<<ListboxSelect>>", self.article_clicked)
