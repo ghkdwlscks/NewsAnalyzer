@@ -222,7 +222,12 @@ class NewsCrawler:
         raw = requests.get(naver_url, headers={"User-Agent": "Mozilla/5.0"})
         html = BeautifulSoup(raw.text, "lxml")
 
-        time = html.select("span.t11")[-1].text
+        if html.select("span.t11"):
+            time = html.select("span.t11")[-1].text
+        elif html.select("span.author > em"):
+            time = html.select("span.author > em")[-1].text
+        elif html.select("div.news_headline > div.info > span"):
+            time = html.select("div.news_headline > div.info > span")[-1].text
 
         if html.select_one("div._article_body_contents.article_body_contents"):
             document = html.select_one("div._article_body_contents.article_body_contents").text
