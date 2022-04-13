@@ -280,12 +280,12 @@ class NewsController:
             )
             text_format_file.write(header)
             for i, article in enumerate(self.views["selection"].selection_list):
-                hour = int(re.search(r"[0-9]+(?=:)", article.time).group())
+                hour = int(re.search(r"[0-9]+(?=:)", article.time).group()) % 12
                 if re.search(r"오후", article.time):
                     hour += 12
                 minute = int(re.search(r"(?<=:)[0-9]+", article.time).group())
                 text_format_file.write(
-                    f"{number_list[i]}. {article.title} [{article.press} {hour:02}:{minute}]\n\n"
+                    f"{number_list[i]}. {article.title} [{article.press} {hour:02}:{minute:02}]\n\n"
                     f"기사 URL: {article.origin_url}\n\n"
                 )
             text_format_file.write("\n육군수사단 과학수사센터\n사이버범죄수사대")
