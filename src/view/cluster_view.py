@@ -70,8 +70,11 @@ class ClusterView(tk.Frame):
             self.cluster_listbox.insert(tk.END, cluster_number)
             for article in cluster:
                 press_width = font.measure(article.press, self.cluster_listbox)
-                padding = (max_press_width - press_width) // space_width + 2
-                self.cluster_listbox.insert(tk.END, article.press + " " * padding + article.title)
+                padding = (max_press_width - press_width) // space_width
+                self.cluster_listbox.insert(
+                    tk.END,
+                    f"{article.press}{' ' * padding} {article.time[-5:]}  {article.title}"
+                )
 
     def article_clicked(self, event):
         """Open article.

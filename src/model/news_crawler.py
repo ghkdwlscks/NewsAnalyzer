@@ -229,6 +229,13 @@ class NewsCrawler:
         elif html.select("div.news_headline > div.info > span"):
             time = html.select("div.news_headline > div.info > span")[-1].text
 
+        date = re.search(r"[0-9]{4}.[0-9]{2}.[0-9]{2}.", time).group()
+        hour = int(re.search(r"[0-9]+(?=:)", time).group()) % 12
+        if re.search(r"오후", time):
+            hour += 12
+        minute = int(re.search(r"(?<=:)[0-9]+", time).group())
+        time = f"{date} {hour:02}:{minute:02}"
+
         if html.select_one("div._article_body_contents.article_body_contents"):
             document = html.select_one("div._article_body_contents.article_body_contents").text
         elif html.select_one("div.article_body"):
