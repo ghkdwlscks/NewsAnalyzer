@@ -61,6 +61,9 @@ class NewsCrawler:
             )
             article_list = pool.map(process_article, target_articles)
 
+        article_list = [article for article in article_list if article is not None]
+        update_progress(len(article_list), len(article_list))
+
         return article_list
 
     @classmethod
@@ -148,7 +151,10 @@ class NewsCrawler:
         title = cls.get_title(article)
         press = cls.get_press(article)
         origin_url, naver_url = cls.get_urls(article)
-        time, document = cls.get_time_and_document(naver_url)
+        try:
+            time, document = cls.get_time_and_document(naver_url)
+        except IndexError:
+            return None
 
         if stop_signal():
             raise InterruptedError
@@ -222,12 +228,7 @@ class NewsCrawler:
         raw = requests.get(naver_url, headers={"User-Agent": "Mozilla/5.0"})
         html = BeautifulSoup(raw.text, "lxml")
 
-        if html.select("span.t11"):
-            time = html.select("span.t11")[-1].text
-        elif html.select("span.author > em"):
-            time = html.select("span.author > em")[-1].text
-        elif html.select("div.news_headline > div.info > span"):
-            time = html.select("div.news_headline > div.info > span")[-1].text
+        time = html.select("span.media_end_head_info_datestamp_time")[-1].text
 
         date = re.search(r"[0-9]{4}.[0-9]{2}.[0-9]{2}.", time).group()
         hour = int(re.search(r"[0-9]+(?=:)", time).group()) % 12
@@ -236,31 +237,22 @@ class NewsCrawler:
         minute = int(re.search(r"(?<=:)[0-9]+", time).group())
         time = f"{date} {hour:02}:{minute:02}"
 
-        if html.select_one("div._article_body_contents.article_body_contents"):
-            document = html.select_one("div._article_body_contents.article_body_contents").text
-        elif html.select_one("div.article_body"):
-            document = html.select_one("div.article_body").text
-        elif html.select_one("div.news_end"):
-            document = html.select_one("div.news_end").text
+        document = html.select_one("div.newsct_article").text
 
-        try:
-            document = document.replace("\n", " ").replace("\t", " ").replace(
-                "// flash 오류를 우회하기 위한 함수 추가 function _flash_removeCallback() {}", " "
-            )
-            document = re.sub(r"[0-9A-Za-z_.+-]+@[0-9A-Za-z-.]+\.[0-9A-Za-z-.]+", " ", document)
-            document = re.sub(r"[^0-9A-Za-z가-힣. ]", " ", document)
-            document = re.sub(r"\s+", " ", document)
-            document = re.sub(r"^\s", "", document)
-            document = re.sub(r"\.{2,}", ".", document)
-            document = re.sub(r"(?<=[가-힣])\.\s*", ".\n", document)
-            document = re.sub(r"\n.*[^.]\n", "\n", document)
-            document = re.sub(r"\n+", "\n", document)
-            document = re.sub(r"\.", "", document)
-            document = re.sub(r"[\n ]$", "", document)
+        document = document.replace("\n", " ").replace("\t", " ").replace(
+            "// flash 오류를 우회하기 위한 함수 추가 function _flash_removeCallback() {}", " "
+        )
+        document = re.sub(r"[0-9A-Za-z_.+-]+@[0-9A-Za-z-.]+\.[0-9A-Za-z-.]+", " ", document)
+        document = re.sub(r"[^0-9A-Za-z가-힣. ]", " ", document)
+        document = re.sub(r"\s+", " ", document)
+        document = re.sub(r"^\s", "", document)
+        document = re.sub(r"\.{2,}", ".", document)
+        document = re.sub(r"(?<=[가-힣])\.\s*", ".\n", document)
+        document = re.sub(r"\n.*[^.]\n", "\n", document)
+        document = re.sub(r"\n+", "\n", document)
+        document = re.sub(r"\.", "", document)
+        document = re.sub(r"[\n ]$", "", document)
 
-            sentences = document.splitlines()
-
-        except UnboundLocalError:
-            return [[]]
+        sentences = document.splitlines()
 
         return time, [sentence.split() for sentence in sentences]

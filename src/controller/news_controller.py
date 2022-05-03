@@ -123,6 +123,13 @@ class NewsController:
         self.views["button"].run_labels.append(message)
 
         def update_progress(num_targets, num_processed):
+            """Update crawler progress.
+
+            Args:
+                num_targets (int): Number of targets.
+                num_processed (int): Number of processed articles.
+            """
+
             progress.set(f"Crawling... ({num_processed}/{num_targets})")
 
         try:
