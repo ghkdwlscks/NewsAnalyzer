@@ -4,6 +4,7 @@
 build/
 dist/
 fasttext/*
+misc/__pycache__/
 src/__pycache__/
 src/*/__pycache__/
 .env
