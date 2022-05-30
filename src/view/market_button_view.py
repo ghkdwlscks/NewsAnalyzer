@@ -23,22 +23,18 @@ class MarketButtonView(tk.Frame):
 
         self.buttons = {
             "run": tk.Button(
-                self,
-                command=self.run_clicked,
-                takefocus=tk.FALSE,
-                text="Run",
-                width=22
+                self, command=self.run_clicked, takefocus=tk.FALSE, text="실행", width=22
             ),
             "cancel": tk.Button(
                 self,
                 command=self.cancel_clicked,
                 state=tk.DISABLED,
                 takefocus=tk.FALSE,
-                text="Cancel",
+                text="취소",
                 width=22
             ),
             "exit": tk.Button(
-                self, command=self.exit_clicked, takefocus=tk.FALSE, text="Exit", width=22
+                self, command=self.exit_clicked, takefocus=tk.FALSE, text="종료", width=22
             )
         }
 

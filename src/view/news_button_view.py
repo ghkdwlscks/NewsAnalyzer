@@ -24,17 +24,14 @@ class NewsButtonView(tk.Frame):
 
         self.buttons = {
             "load": tk.Button(
-                self,
-                command=self.load_model_clicked,
-                takefocus=tk.FALSE,
-                text="Load model",
-                width=22),
+                self, command=self.load_model_clicked, takefocus=tk.FALSE, text="모델 불러오기", width=22
+            ),
             "run": tk.Button(
                 self,
                 command=self.run_clicked,
                 state=tk.DISABLED,
                 takefocus=tk.FALSE,
-                text="Run",
+                text="실행",
                 width=22
             ),
             "cancel": tk.Button(
@@ -42,7 +39,7 @@ class NewsButtonView(tk.Frame):
                 command=self.cancel_clicked,
                 state=tk.DISABLED,
                 takefocus=tk.FALSE,
-                text="Cancel",
+                text="취소",
                 width=22
             ),
             "add": tk.Button(
@@ -50,40 +47,29 @@ class NewsButtonView(tk.Frame):
                 command=self.add_clicked,
                 takefocus=tk.FALSE,
                 state=tk.DISABLED,
-                text="Add to list",
+                text="목록에 추가",
                 width=22
             ),
-            "pdf": tk.Button(
+            "open": tk.Button(
                 self,
-                command=self.pdf_clicked,
-                state=tk.DISABLED,
+                command=self.open_clicked,
                 takefocus=tk.FALSE,
-                text="Save PDF",
+                state=tk.DISABLED,
+                text="외부 브라우저에서 열기",
                 width=22
             ),
             "config": tk.Button(
-                self,
-                command=self.config_clicked,
-                takefocus=tk.FALSE,
-                text="Configurations",
-                width=22
+                self, command=self.config_clicked, takefocus=tk.FALSE, text="설정", width=22
             ),
             "exit": tk.Button(
-                self, command=self.exit_clicked, takefocus=tk.FALSE, text="Exit", width=22
+                self, command=self.exit_clicked, takefocus=tk.FALSE, text="종료", width=22
             ),
             "text": tk.Button(
                 self,
                 command=self.text_clicked,
                 state=tk.DISABLED,
                 takefocus=tk.FALSE,
-                text="Export text format",
-                width=22
-            ),
-            "report": tk.Button(
-                self,
-                state=tk.DISABLED,
-                takefocus=tk.FALSE,
-                text="Export report format",
+                text="문자보고양식 저장",
                 width=22
             ),
             "delete": tk.Button(
@@ -91,7 +77,7 @@ class NewsButtonView(tk.Frame):
                 command=self.delete_clicked,
                 state=tk.DISABLED,
                 takefocus=tk.FALSE,
-                text="Delete",
+                text="삭제",
                 width=22
             )
         }
@@ -100,12 +86,11 @@ class NewsButtonView(tk.Frame):
         self.buttons["run"].pack(anchor=tk.NW, pady=2)
         self.buttons["cancel"].pack(anchor=tk.NW, pady=(2, 30))
         self.buttons["add"].pack(anchor=tk.NW, pady=2)
-        self.buttons["pdf"].pack(anchor=tk.NW, pady=2)
+        self.buttons["open"].pack(anchor=tk.NW, pady=2)
         self.buttons["config"].pack(anchor=tk.NW, pady=(30, 2))
         self.buttons["exit"].pack(anchor=tk.NW, pady=(30, 50))
-        self.buttons["delete"].pack(anchor=tk.SW, pady=(2, 60), side=tk.BOTTOM)
-        self.buttons["report"].pack(anchor=tk.SW, pady=(2, 30), side=tk.BOTTOM)
-        self.buttons["text"].pack(anchor=tk.SW, pady=2, side=tk.BOTTOM)
+        self.buttons["delete"].pack(anchor=tk.SW, pady=(2, 95), side=tk.BOTTOM)
+        self.buttons["text"].pack(anchor=tk.SW, pady=(2, 30), side=tk.BOTTOM)
 
         self.stop_signal = False
 
@@ -127,7 +112,7 @@ class NewsButtonView(tk.Frame):
         """
 
         self.buttons["load"]["state"] = tk.DISABLED
-        self.buttons["load"]["text"] = "Loading model..."
+        self.buttons["load"]["text"] = "모델 불러오는 중..."
         self.buttons["config"]["state"] = tk.DISABLED
 
         threading.Thread(
@@ -145,7 +130,7 @@ class NewsButtonView(tk.Frame):
         run_window.geometry(f"+{self.parent.winfo_x() + 365}+{self.parent.winfo_y() + 90}")
 
         tk.Label(
-            run_window, text="Input the number of pages to be crawled. (1-400)"
+            run_window, text="가져올 페이지의 수를 입력하세요. (1-400)"
         ).pack(pady=(0, 5))
 
         num_pages = tk.StringVar()
@@ -153,7 +138,7 @@ class NewsButtonView(tk.Frame):
         tk.Button(
             run_window,
             command=lambda: self.confirm_clicked(run_window, num_pages),
-            text="Confirm"
+            text="확인"
         ).pack(side=tk.RIGHT)
 
         input_entry = tk.Entry(run_window, textvariable=num_pages, width=5)
@@ -183,7 +168,7 @@ class NewsButtonView(tk.Frame):
             ).start()
             run_window.destroy()
         except ValueError:
-            tkMessageBox.showerror("Error", "Input should be 1-400!", parent=run_window)
+            tkMessageBox.showerror("Error", "1-400 사이의 수를 입력하세요!", parent=run_window)
 
     def cancel_clicked(self):
         """Set stop signal.
@@ -197,11 +182,11 @@ class NewsButtonView(tk.Frame):
 
         self.news_controller.add_to_list()
 
-    def pdf_clicked(self):
-        """Save PDF.
+    def open_clicked(self):
+        """Open selected article in external browser.
         """
 
-        self.news_controller.save_pdf()
+        self.news_controller.open_article()
 
     def config_clicked(self):
         """Open configuration window.

@@ -3,6 +3,7 @@
 
 
 import tkinter as tk
+import webbrowser as wb
 from datetime import datetime
 
 import requests
@@ -50,14 +51,14 @@ class NewsController:
             error_message.pack(anchor=tk.NW)
             self.views["button"].run_labels.append(error_message)
             self.views["button"].buttons["load"]["state"] = tk.NORMAL
-            self.views["button"].buttons["load"]["text"] = "Reload model"
+            self.views["button"].buttons["load"]["text"] = "모델 다시 불러오기"
             self.views["button"].buttons["config"]["state"] = tk.NORMAL
             return
 
         self.lastest_fasttext_model = self.controllers["config"].fasttext_path()
 
         self.views["button"].buttons["load"]["font"] = ("맑은 고딕", 10)
-        self.views["button"].buttons["load"]["text"] = "Model loaded!"
+        self.views["button"].buttons["load"]["text"] = "모델 불러옴"
         self.views["button"].buttons["run"]["state"] = tk.NORMAL
         self.views["button"].buttons["config"]["state"] = tk.NORMAL
 
@@ -69,7 +70,7 @@ class NewsController:
             stop_signal (Callable[[], bool]): Function that returns stop signal.
         """
 
-        self.views["button"].buttons["run"]["text"] = "Running..."
+        self.views["button"].buttons["run"]["text"] = "실행 중..."
         self.views["button"].buttons["cancel"]["state"] = tk.NORMAL
 
         for run_label in self.views["button"].run_labels:
@@ -101,7 +102,7 @@ class NewsController:
             self.views["button"].run_labels.append(stop_message)
 
         self.views["button"].buttons["run"]["state"] = tk.NORMAL
-        self.views["button"].buttons["run"]["text"] = "Run"
+        self.views["button"].buttons["run"]["text"] = "실행"
         self.views["button"].buttons["cancel"]["state"] = tk.DISABLED
         self.views["button"].buttons["config"]["state"] = tk.NORMAL
 
@@ -228,13 +229,14 @@ class NewsController:
             if line_count + len(cluster) > index:
                 if index - line_count < 0:
                     self.views["button"].buttons["add"]["state"] = tk.DISABLED
+                    self.views["button"].buttons["open"]["state"] = tk.DISABLED
                     return
                 self.selected_article = cluster[index - line_count]
-                self.views["button"].buttons["pdf"]["state"] = tk.NORMAL
                 if self.selected_article not in self.views["selection"].selection_list:
                     self.views["button"].buttons["add"]["state"] = tk.NORMAL
                 else:
                     self.views["button"].buttons["add"]["state"] = tk.DISABLED
+                self.views["button"].buttons["open"]["state"] = tk.NORMAL
                 self.views["browser"].open_browser(self.selected_article.naver_url)
                 return
             line_count += len(cluster)
@@ -247,11 +249,11 @@ class NewsController:
 
         self.views["button"].buttons["add"]["state"] = tk.DISABLED
 
-    def save_pdf(self):
-        """Save PDF.
+    def open_article(self):
+        """Open selected article in external browser.
         """
 
-        self.views["browser"].browser.Print()
+        wb.open(self.selected_article.naver_url)
 
     def export_text_format(self):
         """Export text format.
@@ -307,9 +309,7 @@ class NewsController:
 
         if enable:
             self.views["button"].buttons["text"]["state"] = tk.NORMAL
-            self.views["button"].buttons["report"]["state"] = tk.NORMAL
             self.views["button"].buttons["delete"]["state"] = tk.NORMAL
         else :
             self.views["button"].buttons["text"]["state"] = tk.DISABLED
-            self.views["button"].buttons["report"]["state"] = tk.DISABLED
             self.views["button"].buttons["delete"]["state"] = tk.DISABLED

@@ -43,26 +43,26 @@ class ConfigView(tk.Toplevel):
         }
 
         keyword_frame = tk.LabelFrame(
-            self, font=("맑은 고딕", 10, tkFont.BOLD), text="Keyword Configurations", padx=10
+            self, font=("맑은 고딕", 10, tkFont.BOLD), text="키워드 설정", padx=10
         )
         keyword_frame.pack(anchor=tk.NW)
 
-        tk.Label(keyword_frame, text="Include").pack(anchor=tk.NW, pady=2)
+        tk.Label(keyword_frame, text="포함 키워드").pack(anchor=tk.NW, pady=2)
         tk.Entry(
             keyword_frame, textvariable=self.configs["keywords_to_include"], width=55
         ).pack(anchor=tk.NW, pady=(0, 5))
 
-        tk.Label(keyword_frame, text="Exclude").pack(anchor=tk.NW, pady=2)
+        tk.Label(keyword_frame, text="제외 키워드").pack(anchor=tk.NW, pady=2)
         tk.Entry(
             keyword_frame, textvariable=self.configs["keywords_to_exclude"], width=55
         ).pack(anchor=tk.NW, pady=(0, 10))
 
         fasttext_frame = tk.LabelFrame(
-            self, font=("맑은 고딕", 10, tkFont.BOLD), text="FastText Configurations", padx=10
+            self, font=("맑은 고딕", 10, tkFont.BOLD), text="FastText 설정", padx=10
         )
         fasttext_frame.pack(anchor=tk.NW, pady=(10, 0))
 
-        tk.Label(fasttext_frame, text="FastText model path").pack(anchor=tk.NW, pady=2)
+        tk.Label(fasttext_frame, text="FastText 모델 경로").pack(anchor=tk.NW, pady=2)
         browse_frame = tk.Frame(fasttext_frame)
         browse_frame.pack(anchor=tk.NW, fill=tk.BOTH, pady=(0, 10))
         tk.Entry(
@@ -83,7 +83,7 @@ class ConfigView(tk.Toplevel):
         tk.Checkbutton(
             fasttext_frame,
             command=self.check_button_clicked,
-            text="Enable training",
+            text="모델 학습 활성화 (모델 이름)",
             variable=self.configs["train_enabled"]
         ).pack(anchor=tk.NW)
         self.trained_model_entry = tk.Entry(
