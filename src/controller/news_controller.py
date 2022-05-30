@@ -248,6 +248,7 @@ class NewsController:
         self.views["selection"].add_to_list(self.selected_article)
 
         self.views["button"].buttons["add"]["state"] = tk.DISABLED
+        self.views["button"].buttons["export"]["state"] = tk.NORMAL
 
     def open_article(self):
         """Open selected article in external browser.
@@ -300,16 +301,26 @@ class NewsController:
 
         self.views["selection"].delete_from_list()
 
-    def enable_selection_buttons(self, enable):
-        """Activate selection buttons.
+    def enable_export_button(self, enable):
+        """Activate export button.
+
+        Args:
+            enable (bool): Whether to enable export button.
+        """
+
+        if enable:
+            self.views["button"].buttons["export"]["state"] = tk.NORMAL
+        else:
+            self.views["button"].buttons["export"]["state"] = tk.DISABLED
+
+    def enable_delete_button(self, enable):
+        """Activate delete button.
 
         Args:
             enable (bool): Whether to enable delete button.
         """
 
         if enable:
-            self.views["button"].buttons["text"]["state"] = tk.NORMAL
             self.views["button"].buttons["delete"]["state"] = tk.NORMAL
-        else :
-            self.views["button"].buttons["text"]["state"] = tk.DISABLED
+        else:
             self.views["button"].buttons["delete"]["state"] = tk.DISABLED

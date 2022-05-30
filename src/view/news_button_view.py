@@ -64,7 +64,7 @@ class NewsButtonView(tk.Frame):
             "exit": tk.Button(
                 self, command=self.exit_clicked, takefocus=tk.FALSE, text="종료", width=22
             ),
-            "text": tk.Button(
+            "export": tk.Button(
                 self,
                 command=self.text_clicked,
                 state=tk.DISABLED,
@@ -90,7 +90,7 @@ class NewsButtonView(tk.Frame):
         self.buttons["config"].pack(anchor=tk.NW, pady=(30, 2))
         self.buttons["exit"].pack(anchor=tk.NW, pady=(30, 50))
         self.buttons["delete"].pack(anchor=tk.SW, pady=(2, 95), side=tk.BOTTOM)
-        self.buttons["text"].pack(anchor=tk.SW, pady=(2, 30), side=tk.BOTTOM)
+        self.buttons["export"].pack(anchor=tk.SW, pady=(2, 30), side=tk.BOTTOM)
 
         self.stop_signal = False
 
@@ -195,11 +195,11 @@ class NewsButtonView(tk.Frame):
         def update_load_button(old_model, new_model):
             if old_model == new_model:
                 self.buttons["load"]["state"] = tk.DISABLED
-                self.buttons["load"]["text"] = "Model loaded!"
+                self.buttons["load"]["text"] = "모델 불러옴"
                 self.buttons["run"]["state"] = tk.NORMAL
             elif old_model:
                 self.buttons["load"]["state"] = tk.NORMAL
-                self.buttons["load"]["text"] = "Reload model"
+                self.buttons["load"]["text"] = "모델 다시 불러오기"
                 self.buttons["run"]["state"] = tk.DISABLED
 
         self.config_controller.config_clicked(

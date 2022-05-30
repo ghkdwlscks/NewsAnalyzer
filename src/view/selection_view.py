@@ -47,7 +47,8 @@ class SelectionView(tk.Frame):
         """Activate delete button.
         """
 
-        self.news_controller.enable_selection_buttons(True)
+        if self.selection_list:
+            self.news_controller.enable_delete_button(True)
 
     def add_to_list(self, article):
         """Add selected article to listbox.
@@ -66,4 +67,6 @@ class SelectionView(tk.Frame):
         self.selection_list.pop(self.selection_listbox.curselection()[0])
         self.selection_listbox.delete(self.selection_listbox.curselection())
 
-        self.news_controller.enable_selection_buttons(False)
+        if not self.selection_list:
+            self.news_controller.enable_export_button(False)
+        self.news_controller.enable_delete_button(False)
