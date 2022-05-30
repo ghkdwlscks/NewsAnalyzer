@@ -14,10 +14,10 @@ class Vectorizer:
     """Vectorizer object.
 
     Args:
-        weight (float, optional): Weight of title in article vector. Defaults to 0.2.
+        weight (float, optional): Weight of title in article vector. Defaults to 0.3.
     """
 
-    def __init__(self, weight=0.2):
+    def __init__(self, weight=0.3):
         self.weight = weight
         self.model = None
 
