@@ -6,6 +6,8 @@ gensim
 hdbscan
 lxml
 numpy
+pandas
+pandastable
 psutil
 pyinstaller
 requests

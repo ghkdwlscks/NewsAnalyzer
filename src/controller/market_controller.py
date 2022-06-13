@@ -6,6 +6,8 @@ import tkinter as tk
 
 import requests
 
+from model.blacklist import Blacklist
+
 
 class MarketController:
     """MarketController object.
@@ -23,6 +25,8 @@ class MarketController:
 
         self.selected_post = None
 
+        self.blacklist = Blacklist()
+
     def run(self, num_pages, stop_signal):
         """Run MarketWatcher.
 
@@ -31,8 +35,9 @@ class MarketController:
             stop_signal (Callable[[], bool]): Function that returns stop signal.
         """
 
-        self.views["button"].buttons["run"]["text"] = "Running..."
+        self.views["button"].buttons["run"]["text"] = "실행 중..."
         self.views["button"].buttons["cancel"]["state"] = tk.NORMAL
+        self.views["button"].buttons["add_to_blacklist"]["state"] = tk.DISABLED
 
         self.views["market"].post_listbox.delete(0, tk.END)
 
@@ -43,7 +48,7 @@ class MarketController:
             pass
 
         self.views["button"].buttons["run"]["state"] = tk.NORMAL
-        self.views["button"].buttons["run"]["text"] = "Run"
+        self.views["button"].buttons["run"]["text"] = "실행"
         self.views["button"].buttons["cancel"]["state"] = tk.DISABLED
 
     def crawl(self, num_pages, stop_signal):
@@ -72,4 +77,12 @@ class MarketController:
         """
 
         self.selected_post = self.views["market"].post_list[index]
+        self.views["button"].buttons["add_to_blacklist"]["state"] = tk.NORMAL
         self.views["browser"].open_browser(self.selected_post.url)
+
+    def add_to_blacklist(self):
+        """Add to blacklist.
+        """
+
+        self.blacklist.add(self.selected_post)
+        self.blacklist.save()

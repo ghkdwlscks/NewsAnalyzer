@@ -10,15 +10,17 @@ class MarketPost:
     """MarketPost object.
 
     Args:
-        title (str): Title.
         url (str): URL.
-        document (str): Document.
-        phone (str): Phone number.
+        title (str): Title.
+        nickname (str): Nickname.
         email (str): Email address.
+        phone (str): Phone number.
+        document (str): Document.
     """
 
-    title: str
     url: str
-    document: str
-    phone: str
+    title: str
+    nickname: str
     email: str
+    phone: str
+    document: str

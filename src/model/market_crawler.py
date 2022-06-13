@@ -102,12 +102,12 @@ class MarketCrawler:
             "clubid": re.compile(r"(?<=clubid=)[0-9]+"),
             "articleid": re.compile(r"(?<=ArticleRead\.nhn\?articleid=)[0-9]+"),
             "title": re.compile(r"(?<=\"subject\":\").*?(?=\",\")"),
+            "nickname": re.compile(r"(?<=\"nick\":\").*?(?=\")"),
             "phone": re.compile(r"(?<=\"phoneNo\":\")[0-9-]+"),
             "email": re.compile(r"(?<=\"email\":\").+?(?=\")")
         }
 
         raw = requests.get(post_url, headers={"User-Agent": "Mozilla/5.0"})
-        html = BeautifulSoup(raw.text, "lxml")
 
         clubid = re.search(re_compiled["clubid"], raw.text).group()
         articleid = re.search(re_compiled["articleid"], raw.text).group()
@@ -126,10 +126,15 @@ class MarketCrawler:
             return None
 
         title = re.search(re_compiled["title"], raw_text).group()
-        phone_match = re.search(re_compiled["phone"], raw_text)
-        phone = phone_match.group() if phone_match else "Unknown"
-        email_match = re.search(re_compiled["email"], raw_text)
-        email = email_match.group() if email_match else "Unknown"
+        nickname = re.search(re_compiled["nickname"], raw_text).group()
+        try:
+            email = re.search(re_compiled["email"], raw_text).group()
+        except AttributeError:
+            email = "null"
+        try:
+            phone = re.search(re_compiled["phone"], raw_text).group()
+        except AttributeError:
+            phone = "null"
         document = "\n".join([line.text for line in html.select("p.se-text-paragraph")])
 
-        return MarketPost(title, post_url, document, phone, email)
+        return MarketPost(post_url, title, nickname, email, phone, document)
