@@ -80,9 +80,16 @@ class MarketController:
         self.views["button"].buttons["add_to_blacklist"]["state"] = tk.NORMAL
         self.views["browser"].open_browser(self.selected_post.url)
 
-    def add_to_blacklist(self):
+    def add_to_blacklist(self, market_post=None):
         """Add to blacklist.
+
+        Args:
+            market_post (MarketPost, optional): MarketPost object. Defaults to None.
         """
 
-        self.blacklist.add(self.selected_post)
+        if market_post:
+            self.blacklist.add(market_post)
+        else:
+            self.blacklist.add(self.selected_post)
+
         self.blacklist.save()

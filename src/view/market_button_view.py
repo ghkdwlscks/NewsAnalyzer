@@ -8,6 +8,8 @@ import tkinter.messagebox as tkMessageBox
 
 import pandastable as pt
 
+from model.market_post import MarketPost
+
 
 class MarketButtonView(tk.Frame):
     """MarketButtonView object.
@@ -143,7 +145,7 @@ class MarketButtonView(tk.Frame):
         blacklist_window.geometry(f"+{self.parent.winfo_x() + 365}+{self.parent.winfo_y() + 90}")
 
         table_frame = tk.Frame(blacklist_window)
-        table_frame.pack(expand=tk.TRUE, fill=tk.BOTH, padx=10, pady=10, side=tk.LEFT)
+        table_frame.pack(expand=tk.TRUE, fill=tk.BOTH, padx=(0, 20), side=tk.LEFT)
 
         table = pt.Table(
             table_frame,
@@ -154,17 +156,72 @@ class MarketButtonView(tk.Frame):
             cellwidth=150
         )
         table.setSelectedRow(-1)
+        table.unbind_all("<Return>")
+        table.unbind_all("<Tab>")
 
         def on_closing():
-            self.unbind_all("<Return>")
             blacklist_window.destroy()
 
         blacklist_window.protocol("WM_DELETE_WINDOW", on_closing)
 
         button_frame = tk.Frame(blacklist_window)
-        button_frame.pack(fill=tk.BOTH, padx=10, pady=10, side=tk.RIGHT)
+        button_frame.pack(fill=tk.BOTH, side=tk.RIGHT)
 
-        insert_button = tk.Button(button_frame, text="추가", width=12)
+        def on_insert():
+            insert_window = tk.Toplevel(blacklist_window, padx=10, pady=10)
+            insert_window.title("Insert blacklist")
+            insert_window.resizable(False, False)
+
+            tk.Label(insert_window, text="수동으로 블랙리스트에 추가합니다.").pack(anchor=tk.W, pady=(0, 5))
+
+            nickname = tk.StringVar()
+            email = tk.StringVar()
+            phone = tk.StringVar()
+
+            entry_frame = tk.Frame(insert_window)
+            entry_frame.pack(fill=tk.BOTH, padx=(0, 10), side=tk.LEFT)
+
+            nickname_frame = tk.Frame(entry_frame)
+            nickname_frame.pack(fill=tk.BOTH)
+            tk.Label(nickname_frame, text="닉네임").pack(side=tk.LEFT)
+            nickname_entry = tk.Entry(nickname_frame, textvariable=nickname, width=20)
+            nickname_entry.pack(padx=5, side=tk.RIGHT)
+
+            email_frame = tk.Frame(entry_frame)
+            email_frame.pack(fill=tk.BOTH)
+            tk.Label(email_frame, text="이메일").pack(side=tk.LEFT)
+            tk.Entry(email_frame, textvariable=email, width=20).pack(padx=5, side=tk.RIGHT)
+
+            phone_frame = tk.Frame(entry_frame)
+            phone_frame.pack(fill=tk.BOTH)
+            tk.Label(phone_frame, text="휴대폰").pack(side=tk.LEFT)
+            tk.Entry(phone_frame, textvariable=phone, width=20).pack(padx=5, side=tk.RIGHT)
+
+            def on_confirm():
+                if nickname.get() or email.get() or phone.get():
+                    self.market_controller.add_to_blacklist(
+                        MarketPost(None, None, nickname.get(), email.get(), phone.get(), None)
+                    )
+                    table.updateModel(pt.TableModel(self.market_controller.blacklist.dataframe))
+                    table.redraw()
+                insert_window.destroy()
+
+            tk.Button(
+                insert_window, command=on_confirm, text="확인", width=8
+            ).pack(anchor=tk.NW, pady=2)
+
+            def on_cancel():
+                insert_window.destroy()
+
+            tk.Button(
+                insert_window, command=on_cancel, text="취소", width=8
+            ).pack(anchor=tk.NW, pady=2)
+
+            nickname_entry.focus_set()
+
+            insert_window.bind("<Return>", lambda event: on_confirm())
+
+        insert_button = tk.Button(button_frame, command=on_insert, text="추가", width=12)
         insert_button.pack(anchor=tk.NW, pady=(25, 2))
 
         def on_delete(delete_button):
