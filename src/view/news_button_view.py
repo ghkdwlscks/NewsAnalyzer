@@ -127,7 +127,6 @@ class NewsButtonView(tk.Frame):
         run_window = tk.Toplevel(self, padx=10, pady=10)
         run_window.title("Run Configurations")
         run_window.resizable(False, False)
-        run_window.geometry(f"+{self.parent.winfo_x() + 365}+{self.parent.winfo_y() + 90}")
 
         tk.Label(run_window, text="가져올 페이지의 수를 입력하세요. (1-400)").pack(pady=(0, 5))
 

@@ -25,10 +25,6 @@ class ConfigView(tk.Toplevel):
 
         self.title("Configurations")
         self.resizable(False, False)
-        self.geometry(
-            f"+{self.parent.winfo_x() + 175}+{self.parent.winfo_y() + 90}"
-        )
-        self.focus_set()
 
         tk.Button(
             self, command=self.save_clicked, text="Save", width=10
@@ -93,6 +89,8 @@ class ConfigView(tk.Toplevel):
             width=55
         )
         self.trained_model_entry.pack(anchor=tk.NW, pady=(0, 10))
+
+        self.focus_set()
 
     def save_clicked(self):
         """Save configurations.

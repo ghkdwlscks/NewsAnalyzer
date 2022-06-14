@@ -81,7 +81,6 @@ class MarketButtonView(tk.Frame):
         run_window = tk.Toplevel(self, padx=10, pady=10)
         run_window.title("Run Configurations")
         run_window.resizable(False, False)
-        run_window.geometry(f"+{self.parent.winfo_x() + 365}+{self.parent.winfo_y() + 90}")
 
         tk.Label(
             run_window, text="가져올 페이지의 수를 입력하세요. (1-100)"
@@ -142,7 +141,6 @@ class MarketButtonView(tk.Frame):
         blacklist_window = tk.Toplevel(self, padx=10 ,pady=10)
         blacklist_window.title("Blacklist")
         blacklist_window.resizable(False, False)
-        blacklist_window.geometry(f"+{self.parent.winfo_x() + 365}+{self.parent.winfo_y() + 90}")
 
         table_frame = tk.Frame(blacklist_window)
         table_frame.pack(expand=tk.TRUE, fill=tk.BOTH, padx=(0, 20), side=tk.LEFT)
