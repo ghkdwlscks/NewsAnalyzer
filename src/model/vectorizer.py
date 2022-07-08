@@ -83,6 +83,7 @@ class Vectorizer:
             document_vector /= np.linalg.norm(document_vector)
 
         article_vector = title_vector * self.weight + document_vector * (1 - self.weight)
+        article_vector = article_vector + np.random.normal(0, np.nextafter(0, 1), 300)
         if article_vector.any():
             article_vector /= np.linalg.norm(article_vector)
 
