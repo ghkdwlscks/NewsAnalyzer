@@ -21,7 +21,6 @@ class Vectorizer:
         self.weight = weight
         self.model = None
 
-
     def load_fasttext_model(self, fasttext_model_path):
         """Load pretrained FastText model.
 
