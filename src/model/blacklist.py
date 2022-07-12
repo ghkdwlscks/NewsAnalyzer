@@ -19,7 +19,6 @@ class Blacklist():
         except FileNotFoundError:
             self.dataframe = pd.DataFrame(columns=["추가 날짜", "닉네임", "이메일", "휴대폰"])
 
-
     def add(self, market_post):
         """Add market post to the file.
 
@@ -27,16 +26,19 @@ class Blacklist():
             market_post (MarketPost): MarketPost object.
         """
 
-        new_data = pd.DataFrame([[
-            datetime.today().strftime("%y/%m/%d"),
-            market_post.nickname,
-            market_post.email,
-            market_post.phone if market_post.phone != "null" else ""
-        ]], columns=["추가 날짜", "닉네임", "이메일", "휴대폰"])
+        new_data = pd.DataFrame(
+            [[datetime.today().strftime("%y/%m/%d"),
+              market_post.nickname,
+              market_post.email,
+              market_post.phone if market_post.phone != "null" else ""]],
+            columns=["추가 날짜", "닉네임", "이메일", "휴대폰"]
+        )
         self.dataframe = pd.concat([self.dataframe, new_data], ignore_index=True)
 
     def save(self):
         """Save as csv file.
         """
 
+        self.dataframe.sort_values(["추가 날짜"], inplace=True, ignore_index=True)
+        self.dataframe.drop_duplicates(["이메일"], keep="last", inplace=True, ignore_index=True)
         self.dataframe.to_csv("data/blacklist.csv", index=False)

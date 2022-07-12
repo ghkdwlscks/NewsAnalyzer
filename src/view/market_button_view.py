@@ -65,6 +65,8 @@ class MarketButtonView(tk.Frame):
 
         self.stop_signal = False
 
+        self.run_labels = []
+
     def set_controller(self, market_controller):
         """Set controller.
 

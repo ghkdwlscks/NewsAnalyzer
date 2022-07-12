@@ -6,8 +6,8 @@ import tkinter as tk
 import tkinter.font as tkFont
 
 
-class MarketView(tk.Frame):
-    """MarketView object.
+class BlacklistView(tk.Frame):
+    """BlacklistView object.
 
     Args:
         parent (MarketWatcher): MarketWatcher object.
@@ -18,21 +18,21 @@ class MarketView(tk.Frame):
 
         self.market_controller = None
 
-        title = tk.Label(self, font=("맑은 고딕", 15, tkFont.BOLD), text="Market Posts")
+        title = tk.Label(self, font=("맑은 고딕", 15, tkFont.BOLD), text="Blacklist")
         title.pack(anchor=tk.NW)
 
         scrollbar = tk.Scrollbar(self)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        self.post_list = None
+        self.blacklist = []
 
-        self.post_listbox = tk.Listbox(
+        self.blacklist_listbox = tk.Listbox(
             self, font=("맑은 고딕", 10), takefocus=tk.FALSE, yscrollcommand=scrollbar.set
         )
-        self.post_listbox.pack(anchor=tk.NW, expand=tk.TRUE, fill=tk.BOTH, side=tk.LEFT)
+        self.blacklist_listbox.pack(anchor=tk.NW, expand=tk.TRUE, fill=tk.BOTH, side=tk.LEFT)
 
-        scrollbar["command"] = self.post_listbox.yview
-        self.post_listbox.bind("<<ListboxSelect>>", self.post_clicked)
+        scrollbar["command"] = self.blacklist_listbox.yview
+        self.blacklist_listbox.bind("<<ListboxSelect>>", self.blacklist_clicked)
 
     def set_controller(self, market_controller):
         """Set controller.
@@ -43,20 +43,17 @@ class MarketView(tk.Frame):
 
         self.market_controller = market_controller
 
-    def display_posts(self, post_list):
-        """Dispaly market posts.
-
-        Args:
-            post_list (list[MarketPost]): List of MarketPost objects.
+    def display_blacklist(self, blacklist):
+        """Dispaly blacklist.
         """
 
-        self.post_list = post_list
+        self.blacklist = blacklist
 
-        for post in self.post_list:
-            self.post_listbox.insert(tk.END, post.title)
+        for post in self.blacklist:
+            self.blacklist_listbox.insert(tk.END, post.title)
 
-    def post_clicked(self, event):
-        """Open market post.
+    def blacklist_clicked(self, event):
+        """Open blacklist post.
 
         Args:
             event (tkinter.Event): Current event.
@@ -66,4 +63,4 @@ class MarketView(tk.Frame):
             selection = event.widget.curselection()
             if selection:
                 index = selection[0]
-                self.market_controller.post_clicked(index)
+                self.market_controller.post_clicked(index, True)

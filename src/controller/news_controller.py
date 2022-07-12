@@ -72,12 +72,12 @@ class NewsController:
 
         self.views["button"].buttons["run"]["text"] = "실행 중..."
         self.views["button"].buttons["cancel"]["state"] = tk.NORMAL
+        self.views["button"].buttons["add"]["state"] = tk.DISABLED
 
         for run_label in self.views["button"].run_labels:
             run_label.destroy()
 
         self.views["button"].run_labels = []
-        self.views["button"].buttons["add"]["state"] = tk.DISABLED
         self.views["cluster"].cluster_listbox.delete(0, tk.END)
 
         try:
