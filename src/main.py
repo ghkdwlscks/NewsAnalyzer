@@ -56,7 +56,7 @@ class Main(tk.Tk):
 
 
 if __name__ == "__main__":
-    os.chdir("C:/Users/User/Desktop/NewsAnalyzer")
+    os.chdir(f"{os.path.expanduser('~')}/Desktop/NewsAnalyzer")
     main = Main()
     cef.Initialize()
     main.mainloop()
