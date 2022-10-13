@@ -5,6 +5,7 @@
 import tkinter as tk
 import webbrowser as wb
 from datetime import datetime
+from subprocess import call
 
 import requests
 
@@ -294,6 +295,8 @@ class NewsController:
                     f"기사 URL: {article.origin_url}\n\n"
                 )
             text_format_file.write("\n육군수사단 과학수사센터\n사이버범죄수사대")
+
+        call(f"notepad {text_format_path}")
 
     def delete_from_list(self):
         """Delete selected article from selection list.
