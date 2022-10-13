@@ -12,7 +12,7 @@ PyInstaller.__main__.run([
     "--hidden-import=sklearn.neighbors._partition_nodes",
     "--hidden-import=sklearn.utils._typedefs",
     "--icon=icon/icon.ico",
-    "--name=cyber",
+    "--name=NewsAnalyzer",
     "--paths=src",
     "--windowed"
 ])
