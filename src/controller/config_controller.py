@@ -24,7 +24,7 @@ class ConfigController:
 
         Args:
             parent (NewsButtonView): NewsButtonView object.
-            lastest_fasttext_model (str): Lastest FastText model loaded.
+            lastest_fasttext_model (str): Lastest fastText model loaded.
             update_load_button (Callable[str, str], None)
         """
 
@@ -85,19 +85,19 @@ class ConfigController:
         return self.config.get("KEYWORDS", "EXCLUDE")
 
     def fasttext_path(self):
-        """Returns pretrained FastText model path.
+        """Returns pretrained fastText model path.
 
         Returns:
-            str: Pretrained FastText model path.
+            str: Pretrained fastText model path.
         """
 
         return self.config.get("FASTTEXT", "PATH")
 
     def train_enabled(self):
-        """Returns whether FastText model training enabled.
+        """Returns whether fastText model training enabled.
 
         Returns:
-            bool: Whether FastText model training enabled.
+            bool: Whether fastText model training enabled.
         """
 
         return self.config.getboolean("FASTTEXT", "TRAIN")

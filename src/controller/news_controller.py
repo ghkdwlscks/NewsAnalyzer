@@ -32,7 +32,7 @@ class NewsController:
         self.selected_article = None
 
     def load_fasttext_model(self):
-        """Load pretrained FastText model.
+        """Load pretrained fastText model.
         """
 
         for run_label in self.views["button"].run_labels:
@@ -47,7 +47,7 @@ class NewsController:
                 self.controllers["config"].fasttext_path()
             )
         except RuntimeError:
-            error_message = tk.Label(self.views["button"], fg="red", text="Invalid FastText model!")
+            error_message = tk.Label(self.views["button"], fg="red", text="Invalid fastText model!")
             error_message.pack(anchor=tk.NW)
             self.views["button"].run_labels.append(error_message)
             self.views["button"].buttons["load"]["state"] = tk.NORMAL
@@ -154,7 +154,7 @@ class NewsController:
         return article_list
 
     def train(self, article_list):
-        """Update and save FastText model.
+        """Update and save fastText model.
 
         Args:
             article_list (list[Article]): List of Article objects.

@@ -6,7 +6,7 @@
 
 **NewsAnalyzer** crawls and clusters NAVER news articles from given keywords.
 While data preprocessing is the most essential and important part in natural language processing (NLP), since *news articles are well-structured documents*, NewsAnalyzer uses simple and intuitive preprocessing method, exploiting the characteristics of news articles.
-It adopts [FastText](https://fasttext.cc/) model from [Gensim](https://radimrehurek.com/gensim/) in order to obtain word vectors and [HDBSCAN](https://github.com/scikit-learn-contrib/hdbscan) for clustering news articles.
+It adopts [fastText](https://fasttext.cc/) model from [Gensim](https://radimrehurek.com/gensim/) in order to obtain word vectors and [HDBSCAN](https://github.com/scikit-learn-contrib/hdbscan) for clustering news articles.
 
 NewsAnalyzer has following features:
 
@@ -35,7 +35,7 @@ NewsAnalyzer has following features:
     pip3 install -r requirements.txt
     ```
 
-* Downloading pretrained FastText model
+* Downloading pretrained fastText model
 
     ```sh
     wget -P fasttext https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.ko.300.bin.gz
@@ -58,9 +58,9 @@ NewsAnalyzer has following features:
 * Include: Keywords to include split by ","
 * Exclude: Keywords to exclude split by ","
 
-#### FastText Configurations
+#### fastText Configurations
 
-* FastText model path: Path of FastText model path (either Facebook pretrained model or trained model via NewsAnalyzer)
+* fastText model path: Path of fastText model path (either Facebook pretrained model or trained model via NewsAnalyzer)
 * Enable training: Whether to enable training or not
 * Trained model name: Model name to be saved after training
 

@@ -108,7 +108,7 @@ class NewsButtonView(tk.Frame):
         self.config_controller = config_controller
 
     def load_model_clicked(self):
-        """Load pretrained FastText model.
+        """Load pretrained fastText model.
         """
 
         self.buttons["load"]["state"] = tk.DISABLED

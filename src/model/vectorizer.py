@@ -22,10 +22,10 @@ class Vectorizer:
         self.model = None
 
     def load_fasttext_model(self, fasttext_model_path):
-        """Load pretrained FastText model.
+        """Load pretrained fastText model.
 
         Args:
-            fasttext_model_path (str): Pretrained FastText model path.
+            fasttext_model_path (str): Pretrained fastText model path.
         """
 
         try:
@@ -37,7 +37,7 @@ class Vectorizer:
                 raise RuntimeError from invalid_model_error
 
     def update_fasttext_model(self, sentences, model_name):
-        """Update and save FastText model.
+        """Update and save fastText model.
 
         Args:
             sentences (list[list[str]]): List of sentences, which is list of words.
