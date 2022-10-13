@@ -20,9 +20,8 @@ class Main(tk.Tk):
     def __init__(self):
         super().__init__()
 
-        self.title("News Analyzer")
-        self.attributes("-fullscreen", tk.TRUE)
-        self.resizable(tk.FALSE, tk.FALSE)
+        self.title("NewsAnalyzer")
+        self.state("zoomed")
 
         tkFont.nametofont("TkDefaultFont").configure(family="맑은 고딕", size=10)
 
