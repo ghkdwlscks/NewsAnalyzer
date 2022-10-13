@@ -260,7 +260,7 @@ class NewsController:
         """Export text format.
         """
 
-        text_format_path = "format/text_" + datetime.now().strftime("%Y%m%d") + ".txt"
+        text_format_path = f"format/text_{datetime.now().strftime('%Y%m%d')}.txt"
 
         day = datetime.now().weekday()
         if not day:
@@ -284,8 +284,8 @@ class NewsController:
 
         with open(text_format_path, "w", encoding="utf-8") as text_format_file:
             header = (
-                "[사이버순찰 '" + datetime.now().strftime("%y. %m. %d.") +
-                f" ({day})]\n\n\n[ 기타 ] : {num_articles}건\n\n"
+                f"[사이버순찰 '{datetime.now().strftime('%y. %m. %d.')} ({day})]\n\n\n"
+                f"[ 기타 ] : {num_articles}건\n\n"
             )
             text_format_file.write(header)
             for i, article in enumerate(self.views["selection"].selection_list):

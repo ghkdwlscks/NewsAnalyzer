@@ -64,7 +64,7 @@ class MarketCrawler:
             str: Page URL of the index.
         """
 
-        page_postfix = "&start=" + str(page_index * 10 + 1)
+        page_postfix = f"&start={str(page_index * 10 + 1)}"
 
         return cls.url_prefix + keyword_fix + cls.url_postfix + page_postfix
 
