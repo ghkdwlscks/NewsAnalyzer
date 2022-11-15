@@ -26,7 +26,7 @@ NewsAnalyzer has following features:
 
     ```sh
     git clone https://github.com/ghkdwlscks/NewsAnalyzer.git
-    cd NewsAnalyzer/fasttext
+    cd NewsAnalyzer
     ```
 
 * Installing Python3 libraries
